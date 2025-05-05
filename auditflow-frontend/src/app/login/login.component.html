@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In Page</title>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Log In</h2>
+    <div class="error" id="error-message"></div>
+    <form id="login-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <select id="login-type" required>
+            <option value="" disabled selected>Choose Login Type</option>
+            <option value="smg_system">SMG System</option>
+            <option value="qa_technic">QA Technic</option>
+            <option value="global_certification">Global Certification</option>
+        </select>
+        <div class="show-password">
+            <input type="checkbox" id="toggle-password">
+            <label for="toggle-password">Show Password</label>
+        </div>
+        <button type="submit">Log In</button>
+    </form>
+    <div class="forgot-password">
+        <a href="#" id="forgot-password">Forgot Password?</a>
+    </div>
+</div>
+
+<a href="SMG.html">Retour à l'accueil</a>
+
+</body>
+</html>
