@@ -1,38 +1,47 @@
-// Récupération des éléments HTML avec typage
-const form = document.getElementById('login-form') as HTMLFormElement;
-const usernameInput = document.getElementById('username') as HTMLInputElement;
-const passwordInput = document.getElementById('password') as HTMLInputElement;
-const loginTypeSelect = document.getElementById('login-type') as HTMLSelectElement;
-const errorMessage = document.getElementById('error-message') as HTMLDivElement;
-const forgotPasswordLink = document.getElementById('forgot-password') as HTMLAnchorElement;
-const togglePasswordCheckbox = document.getElementById('toggle-password') as HTMLInputElement;
+import { Component } from '@angular/core';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {Router, RouterModule} from '@angular/router';
+import {FormsModule} from "@angular/forms";
+import {CommonModule} from "@angular/common";
 
-// Gestion de la soumission du formulaire
-form.addEventListener('submit', (event: Event) => {
-    event.preventDefault();
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule, HttpClientModule],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent {
+  username: string = '';
+  password: string = '';
+  error: string = '';
 
-    const username: string = usernameInput.value;
-    const password: string = passwordInput.value;
-    const loginType: string = loginTypeSelect.value;
+  constructor(private http: HttpClient, private router: Router) {}
 
-    if (username === 'admin' && password === 'password' && loginType === 'smg_system') {
-        alert('SMG System login successful!');
-    } else if (username === 'user' && password === 'password' && loginType === 'qa_technic') {
-        alert('QA Technic login successful!');
-    } else if (username === 'global' && password === 'password' && loginType === 'global_certification') {
-        alert('Global Certification login successful!');
-    } else {
-        errorMessage.textContent = 'Invalid username or password.';
-    }
-});
+  onLogin() {
+    const loginPayload = {
+      username: this.username,
+      password: this.password
+    };
 
-// Gestion du lien "Mot de passe oublié"
-forgotPasswordLink.addEventListener('click', (event: MouseEvent) => {
-    event.preventDefault();
-    alert('A password reset link has been sent to your email address.');
-});
+    this.http.post<any>('http://localhost:8080/api/auth/login', loginPayload).subscribe({
+      next: (response) => {
+        localStorage.setItem('token', response.token);
+        const decodedToken = JSON.parse(atob(response.token.split('.')[1]));
+        const roles = decodedToken.roles.split(',');
 
-// Gestion de l'affichage du mot de passe
-togglePasswordCheckbox.addEventListener('change', () => {
-    passwordInput.type = togglePasswordCheckbox.checked ? 'text' : 'password';
-});
+        if (roles.includes('ROLE_ADMIN')) {
+          this.router.navigate(['/dashboard-admin']);
+        } else if (roles.includes('ROLE_Customer')) {
+          this.router.navigate(['/dashboard-customer']);
+        } else if (roles.includes('ROLE_AUDITOR')) {
+          this.router.navigate(['/dashboard-auditor']);
+        }
+
+      },
+      error: () => {
+        this.error = 'Invalid username or password';
+      }
+    });
+  }
+}

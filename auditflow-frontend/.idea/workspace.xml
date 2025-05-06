@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ec186dd2-33c3-4c72-a09a-625054c5dc37" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/.tsbuildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/@angular_core.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/@angular_core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/@angular_platform-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/@angular_platform-browser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/@angular_router.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/@angular_router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/@angular_router.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/@angular_router.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/chunk-22LTFU5A.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/chunk-22LTFU5A.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/chunk-LIDV4QBS.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps/chunk-LIDV4QBS.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_core.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_platform-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_platform-browser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_platform-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_platform-server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_router.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_ssr.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_ssr.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_ssr_node.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_ssr_node.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_ssr_node.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/@angular_ssr_node.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-5VNFMUMS.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-5VNFMUMS.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-AFORWHUB.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-AFORWHUB.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-KK56R36F.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-KK56R36F.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-KSGKWYJE.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-KSGKWYJE.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-UBWP4UYZ.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/chunk-UBWP4UYZ.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/express.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/19.2.9/auditflow-frontend/vite/deps_ssr/express.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/app.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/app.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/login/login.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/login/login.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/login/login.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/login/login.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auditflow/src/main/java/com/auditflow/auditflow/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../auditflow/src/main/java/com/auditflow/auditflow/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auditflow/src/main/java/com/auditflow/auditflow/security/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../auditflow/src/main/java/com/auditflow/auditflow/security/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auditflow/src/main/java/com/auditflow/auditflow/security/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../auditflow/src/main/java/com/auditflow/auditflow/security/JwtUtils.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2wiTC008f2xqu2fCRS2UEUmSTCz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Lenovo/Desktop/app-web-auditflow/auditflow-frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.Angular CLI Server.executor": "Run",
+    "ts.external.directory.path": "C:\\Users\\Lenovo\\Desktop\\app-web-auditflow\\auditflow-frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="npm.Angular CLI Server">
+    <configuration name="Angular Application" type="JavascriptDebugType" uri="http://localhost:4200">
+      <method v="2" />
+    </configuration>
+    <configuration name="Angular CLI Server" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ec186dd2-33c3-4c72-a09a-625054c5dc37" name="Changes" comment="" />
+      <created>1746523263479</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746523263479</updated>
+      <workItem from="1746523264679" duration="4622000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
