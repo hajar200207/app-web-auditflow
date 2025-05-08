@@ -1,1 +1,28 @@
-<p>dashboard-auditor works!</p>
+<div class="container">
+    <h2>Liste des Programmes d'Audit</h2>
+    <div *ngIf="programmes.length === 0">
+      Aucun programme trouvé.
+    </div>
+  
+    <div *ngFor="let prog of programmes" class="card">
+      <h3>Programme ID : {{ prog.id }}</h3>
+      <p><strong>Date :</strong> {{ prog.date | date }}</p>
+  
+      <div>
+        <h4>Tâches :</h4>
+        <ul>
+          <li *ngFor="let task of prog.tasks">
+            {{ task.name }} - {{ task.description }}
+          </li>
+        </ul>
+      </div>
+  
+      <div *ngIf="prog.note">
+        <h4>Note :</h4>
+        <p>{{ prog.note.content }}</p>
+      </div>
+  
+      <button (click)="deleteProgramme(prog.id)">Supprimer</button>
+    </div>
+  </div>
+  
