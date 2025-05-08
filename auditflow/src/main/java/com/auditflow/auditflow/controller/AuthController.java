@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import com.auditflow.auditflow.dto.JWTResponse;
 import com.auditflow.auditflow.dto.LoginRequest;
 import com.auditflow.auditflow.dto.RegisterRequest;
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
