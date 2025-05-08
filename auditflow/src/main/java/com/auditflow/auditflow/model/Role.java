@@ -1,8 +1,12 @@
 package com.auditflow.auditflow.model;
 
+import java.util.HashSet;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.Set;
+
 
 @Getter
 @Setter
@@ -15,4 +19,7 @@ public class Role {
 
     @Column(unique = true)
     private String name;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
+
 }
