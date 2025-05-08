@@ -1,0 +1,180 @@
+/* Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Layout */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: white;
+    color: #400146;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo {
+    width: 180px;
+}
+
+.login-btn {
+    background-color: orange;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.hero h1 {
+    font-size: 40px;
+    color: #4b014b;
+}
+
+.hero span {
+    color: orange;
+}
+
+.desc {
+    margin-top: 20px;
+    font-size: 18px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-btn {
+    margin-top: 30px;
+    background-color: orange;
+    color: white;
+    padding: 15px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+}
+
+
+/* Circles section */
+.circles {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 60px 0;
+    flex-wrap: wrap;
+}
+
+.circle {
+    border-radius: 50%;
+    border: 6px solid orange;
+    object-fit: cover;
+}
+
+.large { width: 300px; height: 300px; }
+.medium { width: 200px; height: 200px; }
+.small { width: 150px; height: 150px; }
+
+/* Footer */
+.footer {
+    background-color: #3c003c;
+    color: white;
+    padding: 40px;
+    text-align: center;
+    border-top: 8px solid orange;
+}
+
+.footer img {
+    width: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.footer p {
+    margin: 10px 0;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .hero h1 { font-size: 30px; }
+    .services-grid { gap: 20px; }
+    .service { width: 100px; }
+    .circle.large { width: 200px; height: 200px; }
+    .circle.medium { width: 150px; height: 150px; }
+}
+/* Animation */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.services-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 50px;
+    padding: 20px;
+}
+
+.service {
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    padding: 20px;
+    width: 230px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    animation: continuousSlide 3s ease-in-out infinite;
+    transition: transform 0.3s;
+}
+
+.service img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.service span {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Animation continue gauche-droite */
+@keyframes continuousSlide {
+    0% {
+        transform: translateX(-50px);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateX(0px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50px);
+        opacity: 0.5;
+    }
+}
+
+/* Décalage pour effet fluide */
+.service:nth-child(1) { animation-delay: 0s; }
+.service:nth-child(2) { animation-delay: 0.3s; }
+.service:nth-child(3) { animation-delay: 0.6s; }
+.service:nth-child(4) { animation-delay: 0.9s; }
+.service:nth-child(5) { animation-delay: 1.2s; }
+.service:nth-child(6) { animation-delay: 1.5s; }

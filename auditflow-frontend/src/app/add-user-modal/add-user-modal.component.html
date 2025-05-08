@@ -1,0 +1,42 @@
+<div class="overlay" *ngIf="visible">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Add User</h3>
+            <button class="close-btn" (click)="closeModal()">×</button>
+        </div>
+
+        <form (ngSubmit)="addUser()">
+            <div class="modal-body">
+                <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        [(ngModel)]="user.username"
+                        required
+                />
+                <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        [(ngModel)]="user.email"
+                        required
+                />
+                <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        [(ngModel)]="user.password"
+                        required
+                />
+                <select name="role" [(ngModel)]="user.role" required>
+                    <option value="">Select role</option>
+                    <option value="ROLE_ADMIN">Admin</option>
+                    <option value="ROLE_AUDITOR">Auditor</option>
+                    <option value="ROLE_Customer">Customer</option>
+                </select>
+                <div class="error" *ngIf="error">{{ error }}</div>
+                <button type="submit">Create</button>
+            </div>
+        </form>
+    </div>
+</div>

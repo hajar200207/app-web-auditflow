@@ -1,0 +1,80 @@
+.left-navbar {
+    width: 80px;
+    background-color: #2c3e50;
+    height: 100vh;
+    padding-top: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 998;
+}
+
+.sidebar-icons {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.sidebar-icons li {
+    position: relative;
+    color: #ccc;
+    padding: 15px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.sidebar-icons li.active {
+    background-color: #1abc9c;
+    color: white;
+}
+
+.sidebar-icons li:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Tooltip à droite */
+.tooltip {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    background-color: #1abc9c;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin-left: 10px;
+}
+
+.submenu-right {
+    position: absolute;
+    top: 0;
+    left: 80px; /* just beside the icon */
+    background-color: #34495e;
+    padding: 10px;
+    border-radius: 4px;
+    z-index: 1000; /* Assure qu'il est au-dessus */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+
+.submenu-right a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    font-size: 13px;
+    transition: background 0.3s;
+}
+
+.submenu-right a:hover {
+    background-color: #1abc9c;
+}

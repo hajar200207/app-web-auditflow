@@ -1,0 +1,60 @@
+.top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 20px 20px;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-left .logo-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-right a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.navbar-right input[type="text"] {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 250px;
+}
+
+.notifications {
+    position: relative;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.notifications .badge {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 6px;
+    font-size: 12px;
+    position: absolute;
+    top: -5px;
+    right: -10px;
+}
+
+.user {
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
