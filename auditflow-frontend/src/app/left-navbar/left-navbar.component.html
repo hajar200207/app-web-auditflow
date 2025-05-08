@@ -1,0 +1,51 @@
+<div class="left-navbar">
+    <ul class="sidebar-icons">
+        <li (click)="toggleSubmenu('calendar')" [class.active]="active === 'calendar'">
+            <i class="fa fa-calendar"></i>
+            <span class="tooltip">Schedule & Tasks</span>
+            <div class="submenu-right" *ngIf="active === 'calendar'">
+                <a (click)="navigateTo('calendar', 'calendar')">Calendar</a>
+                <a (click)="navigateTo('tasks', 'calendar')">Tasks</a>
+            </div>
+        </li>
+
+        <li (click)="toggleSubmenu('chart')" [class.active]="active === 'chart'">
+            <i class="fa fa-pie-chart"></i>
+            <span class="tooltip">Dashboards</span>
+            <div class="submenu-right" *ngIf="active === 'chart'">
+                <a (click)="navigateTo('sales', 'chart')">Sales Dashboard</a>
+                <a (click)="navigateTo('agent', 'chart')">Agent Dashboard</a>
+            </div>
+        </li>
+
+        <li (click)="navigateTo('documents', 'docs')" [class.active]="active === 'docs'">
+            <i class="fa fa-book"></i>
+            <span class="tooltip">Documents</span>
+        </li>
+
+        <li (click)="navigateTo('settings', 'settings')" [class.active]="active === 'settings'">
+            <i class="fa fa-cog"></i>
+            <span class="tooltip">Settings</span>
+        </li>
+
+        <li (click)="navigateTo('home', 'home')" [class.active]="active === 'home'">
+            <i class="fa fa-home"></i>
+            <span class="tooltip">Home</span>
+        </li>
+
+        <li (click)="navigateTo('contact', 'contact')" [class.active]="active === 'contact'">
+            <i class="fa fa-envelope"></i> <!-- ✅ correction ici -->
+            <span class="tooltip">Contact</span>
+        </li>
+
+        <li (click)="navigateTo('users', 'users')" [class.active]="active === 'users'">
+            <i class="fa fa-user"></i>
+            <span class="tooltip">Users</span>
+        </li>
+
+        <li (click)="navigateTo('group', 'group')" [class.active]="active === 'group'">
+            <i class="fa fa-users"></i>
+            <span class="tooltip">Groups</span>
+        </li>
+    </ul>
+</div>

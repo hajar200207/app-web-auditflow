@@ -1,0 +1,13 @@
+<nav class="top-navbar">
+    <div class="navbar-left">
+        <span class="logo-title">SMG Main System</span>
+    </div>
+    <div class="navbar-right">
+        <a href="#">Auditor Expiry Dates</a>
+        <button (click)="showAddUserModal = true">Add Auditor / Customer</button>
+        <app-add-user-modal *ngIf="showAddUserModal" (onClose)="showAddUserModal = false"></app-add-user-modal>
+        <input type="text" placeholder="Search by Customer Name or File #" />
+        <span class="notifications">🔔 <span class="badge">22</span></span>
+        <span class="user">Yassine Bounou ⬇</span>
+    </div>
+</nav>
