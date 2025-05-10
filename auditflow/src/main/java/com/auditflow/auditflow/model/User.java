@@ -3,6 +3,7 @@ package com.auditflow.auditflow.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+
 public class User {
 
     @Id
@@ -27,7 +29,7 @@ public class User {
     private String email;
     private String password;
     private boolean enabled = true;
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();

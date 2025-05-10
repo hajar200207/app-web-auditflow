@@ -1,9 +1,14 @@
 package com.auditflow.auditflow.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
 public class ProgrammeAuditor {
 
@@ -11,13 +16,18 @@ public class ProgrammeAuditor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date date;  // التاريخ ديال البرنامج
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
-    @OneToMany(cascade = CascadeType.ALL)  // لائحة ديال المهام
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Task> tasks;
 
-    @OneToOne(cascade = CascadeType.ALL)  // ملاحظة واحدة مرتبطة بالبرنامج
+
+    @OneToOne(cascade = CascadeType.ALL)
     private NoteText note;
 
-    // Getters & Setters (باش نقراو و نكتبو القيم ديال المتغيرات)
+    @ManyToOne
+    @JoinColumn(name = "auditor_id")
+    private User auditor;
+
 }
