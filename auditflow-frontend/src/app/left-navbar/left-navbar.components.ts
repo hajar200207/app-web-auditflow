@@ -20,7 +20,9 @@ export class LeftNavbarComponent {
 
   navigateTo(path: string, section: string) {
     this.active = section;
-    // correction ici 👇 ajoute le préfixe 'dashboard-admin'
-    this.router.navigate([`/dashboard-admin/${path}`]);
+    const userRole = localStorage.getItem('role'); // ou un authService
+    const basePath = userRole === 'admin' ? 'dashboard-admin' : 'dashboard-auditor';
+    this.router.navigate([`/${basePath}/${path}`]);
   }
+
 }

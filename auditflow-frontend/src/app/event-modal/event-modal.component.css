@@ -12,6 +12,38 @@
 
 }
 
+/* Couleurs d'événements dans le calendrier */
+.fc-event.fc-event-audits {
+    background-color: #3498db !important;
+    border: none !important;
+    color: #fff !important;
+}
+.fc-event.fc-event-trainings {
+    background-color: #f1c40f !important;
+    border: none !important;
+    color: #000 !important;
+}
+.fc-event.fc-event-leaves {
+    background-color: #2ecc71 !important;
+    border: none !important;
+    color: #fff !important;
+}
+.fc-event.fc-event-others {
+    background-color: #9b59b6 !important;
+    border: none !important;
+    color: #fff !important;
+}
+
+.fc-event.fc-event-holiday {
+    background-color: #e67e22 !important;
+    border: none !important;
+    color: #fff !important;
+}
+.fc-event.fc-event-4es {
+    background-color: #34495e !important;
+    border: none !important;
+    color: #fff !important;
+}
 .modal::backdrop {
     background: rgba(0, 0, 0, 0.5);
 }

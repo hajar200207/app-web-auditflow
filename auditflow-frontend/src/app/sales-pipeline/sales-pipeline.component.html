@@ -1,0 +1,65 @@
+<!--<div class="pipeline-header">Sales Pipeline</div>-->
+
+<!--<div class="pipeline-container">-->
+<!--    <div class="stage" *ngFor="let stage of stages">-->
+<!--        <div class="stage-header">-->
+<!--            <div class="stage-number">{{ stage.number }}</div>-->
+<!--            <div class="stage-label">{{ stage.label }}</div>-->
+<!--        </div>-->
+
+<!--        <div *ngIf="getOpportunitiesByStage(stage.key).length === 0" class="empty">-->
+<!--            No Available Opp. as this stage-->
+<!--        </div>-->
+
+<!--        <div class="card" *ngFor="let opp of getOpportunitiesByStage(stage.key)">-->
+<!--            <strong>{{ opp.company.name }}</strong>-->
+<!--            <p><strong>{{ opp.opportunityName }}</strong></p>-->
+<!--            <p><strong>Standard:</strong> {{ opp.standard }}</p>-->
+<!--            <p><strong>Estimated Value ($):</strong> {{ opp.estimatedValue || 0 }} $</p>-->
+<!--            <p><strong>Sales Rep:</strong> {{ opp.assignedAuditor }}</p>-->
+<!--            <p><strong>Opportunity Type:</strong> CERTIFICATION</p>-->
+<!--            <p><strong>Certification Body:</strong> {{ opp.certificationBody }}</p>-->
+<!--            <p><strong>Type:</strong> {{ opp.type }}</p>-->
+<!--            <p><strong>Status:</strong> {{ opp.status }}</p>-->
+<!--            <p><strong>Date Created:</strong> {{ opp.auditExpectedDate | date }}</p>-->
+<!--            <p><strong>Last Date Modified:</strong> {{ opp.lastModified || '&#45;&#45;&#45;&#45;' }}</p>-->
+<!--            <a class="link">Go to pipeline ➔</a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<div class="pipeline-container">
+    <div class="stage" *ngFor="let stage of stages">
+        <h3>{{ stage.number }} - {{ stage.label }}</h3>
+
+        <div *ngIf="getOpportunitiesByStage(stage.key).length === 0" class="empty">
+            No Available Opp. as this stage
+        </div>
+
+        <div class="card" *ngFor="let opp of getOpportunitiesByStage(stage.key)">
+            <h4>{{ opp.company.name }}</h4>
+            <p><strong>{{ opp.opportunityName }}</strong></p>
+            <p><strong>Standard:</strong> {{ opp.standard }}</p>
+            <p><strong>Sales Rep:</strong> {{ opp.assignedAuditor }}</p>
+            <p><strong>Certification Body:</strong> {{ opp.certificationBody }}</p>
+            <p><strong>Status:</strong> {{ opp.status }}</p>
+            <p><strong>Stage:</strong> {{ opp.stage }}</p>
+
+            <!-- Admin can move cards -->
+            <div *ngIf="role === 'admin'">
+                <label>Move to:</label>
+                <select [(ngModel)]="opp.newStage">
+                    <option *ngFor="let s of stages" [value]="s.key">{{ s.label }}</option>
+                </select>
+
+                <label>Status:</label>
+                <select [(ngModel)]="opp.newStatus">
+                    <option *ngIf="opp.newStage !== 'Contract'" value="In Progress">In Progress</option>
+                    <option *ngIf="opp.newStage === 'Contract'" value="Done">Done</option>
+                    <option *ngIf="opp.newStage === 'Contract'" value="Lost">Lost</option>
+                </select>
+
+                <button (click)="updateStage(opp.id, opp.newStage, opp.newStatus)">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

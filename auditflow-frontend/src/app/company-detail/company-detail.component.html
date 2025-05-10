@@ -1,0 +1,129 @@
+
+<div class="modal-backdrop" *ngIf="showAuditForm">
+    <div class="modal-content">
+        <app-new-supplier-audit
+                [companyId]="company.id"
+                (auditCreated)="onAuditCreated()"
+        ></app-new-supplier-audit>
+    </div>
+</div>
+
+<div class="company-detail-container" *ngIf="company">
+    <div class="company-header">
+        <h2>{{ company.name }}</h2>
+        <div class="action-buttons">
+            <button>Edit</button>
+            <button>Contacts ({{ company.contacts?.length || 0 }})</button>
+            <button>Sites (0)</button>
+            <button>Turn Opportunity</button>
+            <button (click)="showAuditForm = true">New Supplier Audit</button>
+            <button [routerLink]="['/dashboard-auditor/sales-pipeline']">
+                Opportunities ({{ opportunityCount }})
+            </button>
+
+            <button>Opportunities History</button>
+            <button>Add Customer File</button>
+            <button>Request Changes</button>
+            <button>Renew Contract</button>
+            <button>Projects (1)</button>
+            <button>Audit History</button>
+            <button>Training History</button>
+        </div>
+    </div>
+
+    <h3>Company Details</h3>
+    <div class="details-section">
+        <div class="details-left">
+            <div class="detail-item">
+                <span class="detail-label">Name</span>
+                <span class="detail-value">{{ company.name }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Trading Name</span>
+                <span class="detail-value">N/A</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Website</span>
+                <span class="detail-value">{{ company.website || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Agent</span>
+                <span class="detail-value">{{ company.agent || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">National Address</span>
+                <span class="detail-value">{{ company.address }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">State/Province</span>
+                <span class="detail-value">{{ company.state || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Postal Code</span>
+                <span class="detail-value">{{ company.postalCode || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">PO BOX</span>
+                <span class="detail-value">{{ company.poBox || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Fax</span>
+                <span class="detail-value">{{ company.fax || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Main Contact</span>
+                <span class="detail-value">{{ company.mainContact || 'N/A' }}</span>
+            </div>
+        </div>
+
+        <div class="details-right">
+            <div class="detail-item">
+                <span class="detail-label">Other Language</span>
+                <span class="detail-value">N/A</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Email</span>
+                <span class="detail-value">{{ company.email }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Industry Sector</span>
+                <span class="detail-value">{{ company.sector }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">City</span>
+                <span class="detail-value">{{ company.city }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Country</span>
+                <span class="detail-value">{{ company.country }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Phone Numbers</span>
+                <span class="detail-value">{{ company.phone }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">No. of Employees</span>
+                <span class="detail-value">{{ company.employees || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Secondary Contact For Email Communications</span>
+                <span class="detail-value">N/A</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="notes-section">
+        <div class="note-box">
+            <div class="note-title">Global Notes</div>
+            <div class="note-content">No Available Notes.</div>
+        </div>
+        <div class="note-box">
+            <div class="note-title">Audit Notes</div>
+            <div class="note-content">No Available Notes.</div>
+        </div>
+        <div class="note-box">
+            <div class="note-title">Signed Contract Notes</div>
+            <div class="note-content">No Available Notes.</div>
+        </div>
+    </div>
+</div>

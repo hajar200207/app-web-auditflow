@@ -1,0 +1,58 @@
+<p>companies-info works!</p>
+<div class="companies-container">
+    <h2>Companies List</h2>
+
+    <div class="toolbar">
+        <input type="text" placeholder="Search Company" [(ngModel)]="searchTerm" class="search-input" />
+
+        <select [(ngModel)]="selectedCountry" class="filter-select">
+            <option value="">Filter by Country</option>
+            <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+        </select>
+
+        <select [(ngModel)]="selectedSector" class="filter-select">
+            <option value="">Filter by Sector</option>
+            <option *ngFor="let sector of sectors" [value]="sector">{{ sector }}</option>
+        </select>
+
+        <div class="export-buttons">
+            <button (click)="exportPDF()">PDF</button>
+            <button (click)="print()">Print</button>
+            <button (click)="exportExcel()">Excel</button>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Company</th>
+            <th>National Address</th>
+            <th>Country</th>
+            <th>Industry Sector</th>
+            <th>Phone</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let company of filteredCompanies()">
+            <td>
+                <a [routerLink]="['company-details', company.id]">{{ company.name }}</a>
+
+
+
+            </td>            <td>{{ company.address }}</td>
+            <td>{{ company.country }}</td>
+            <td>{{ company.sector }}</td>
+            <td>{{ company.phone }}</td>
+            <td>{{ company.email }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<button class="add-button" (click)="showModal = true">+ Add New Company</button>
+
+<app-add-company-modal
+        *ngIf="showModal"
+        (close)="showModal = false"
+        (companyCreated)="onCompanyCreated()">
+</app-add-company-modal>

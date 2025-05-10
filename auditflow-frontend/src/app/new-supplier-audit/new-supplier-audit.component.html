@@ -1,0 +1,59 @@
+<div class="supplier-audit-form">
+    <div>
+        <label>Opportunity Name</label>
+        <input type="text" [(ngModel)]="audit.opportunityName" />
+    </div>
+
+    <div>
+        <label>Select Standard</label>
+        <select [(ngModel)]="audit.standard">
+            <option *ngFor="let standard of standards" [value]="standard">{{ standard }}</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Certification Body</label>
+        <select [(ngModel)]="audit.certificationBody">
+            <option *ngFor="let body of certificationBodies" [value]="body">{{ body }}</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Work Item ID</label>
+        <input type="text" [(ngModel)]="audit.workItemId" />
+    </div>
+
+    <div>
+        <label>Audit Code</label>
+        <select [(ngModel)]="audit.auditCode">
+            <option *ngFor="let code of auditCodes" [value]="code">{{ code }}</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Assigned Auditor</label>
+        <select [(ngModel)]="audit.assignedAuditor">
+            <option *ngFor="let auditor of auditors" [value]="auditor">{{ auditor }}</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Audit Expected Date</label>
+        <input type="date" [(ngModel)]="audit.auditExpectedDate" />
+    </div>
+
+    <div>
+        <label>Audit Days</label>
+        <input type="number" [(ngModel)]="audit.auditDays" />
+    </div>
+
+    <div>
+        <label>Certificate Expiry Date</label>
+        <input type="date" [(ngModel)]="audit.certificateExpiryDate" />
+    </div>
+
+    <div class="buttons">
+        <button class="close-btn" (click)="onClose()">Close</button>
+        <button class="submit-btn" (click)="submit()">Submit</button>
+    </div>
+</div>

@@ -1,51 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {LeftNavbarComponent} from "../left-navbar/left-navbar.components";
+import {NavbarComponent} from "../navbar/navbar.component";
+import {RouterOutlet} from "@angular/router";
 
-interface Task {
-  id: number;
-  name: string;
-  description: string;
-}
-
-interface NoteText {
-  id: number;
-  content: string;
-}
-
-interface ProgrammeAuditor {
-  id: number;
-  date: string;
-  tasks: Task[];
-  note: NoteText;
-}
 
 @Component({
   selector: 'app-dashboard-auditor',
   templateUrl: './dashboard-auditor.component.html',
-  styleUrls: ['./dashboard-auditor.component.css']
+  styleUrls: ['./dashboard-auditor.component.css'],
+  standalone: true,
+  imports: [CommonModule, FormsModule, LeftNavbarComponent, NavbarComponent, RouterOutlet],
+  providers: [DatePipe]
 })
-export class DashboardAuditorComponent implements OnInit {
-  programmes: ProgrammeAuditor[] = [];
-  apiUrl = 'http://localhost:8080/api/programme-auditor/';
+export class DashboardAuditorComponent {
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
-    this.getAllProgrammes();
-  }
-
-  getAllProgrammes(): void {
-    this.http.get<ProgrammeAuditor[]>(this.apiUrl).subscribe({
-      next: data => this.programmes = data,
-      error: err => console.error('Erreur de chargement', err)
-    });
-  }
-
-  deleteProgramme(id: number): void {
-    this.http.delete(this.apiUrl + id).subscribe({
-      next: () => this.getAllProgrammes(),
-      error: err => console.error('Erreur de suppression', err)
-    });
-  }
 }
-

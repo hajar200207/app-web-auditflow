@@ -1,47 +1,134 @@
-<div class="calendar-toolbar">
-    <div class="filters">
-        <label>
-            Select Users
-            <select [(ngModel)]="selectedUser">
-                <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
-            </select>
-        </label>
 
-        <label>
-            Select Country
-            <select [(ngModel)]="selectedCountry">
-                <option value="">Nothing selected</option>
-                <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
-            </select>
-        </label>
+<!--<div class="page-container">-->
+<!--    &lt;!&ndash; LÉGENDE À GAUCHE &ndash;&gt;-->
+<!--    <div class="legend-sidebar">-->
+<!--        <h3>Event Legend</h3>-->
+<!--        <div class="legend-list">-->
+<!--            <div class="legend-item"><span class="legend-color audits"></span> Audits</div>-->
+<!--            <div class="legend-item"><span class="legend-color trainings"></span> Trainings</div>-->
+<!--            <div class="legend-item"><span class="legend-color leaves"></span> Leaves</div>-->
+<!--            <div class="legend-item"><span class="legend-color others"></span> Others</div>-->
+<!--            <div class="legend-item"><span class="legend-color holiday"></span> Holiday</div>-->
+<!--            <div class="legend-item"><span class="legend-color foures"></span> 4Es</div>-->
+<!--        </div>-->
+<!--    </div>-->
 
-        <label>
-            Event Type
-            <select [(ngModel)]="eventType">
-                <option value="">Nothing selected</option>
-                <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
-            </select>
-        </label>
+<!--    &lt;!&ndash; CALENDRIER À DROITE &ndash;&gt;-->
+<!--    <div class="calendar-container">-->
+<!--        <div class="calendar-toolbar">-->
+<!--            <div class="filters">-->
+<!--                <label>-->
+<!--                    Select Users-->
+<!--                    <select [(ngModel)]="selectedUser">-->
+<!--                        <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>-->
+<!--                    </select>-->
+<!--                </label>-->
 
-        <button class="btn" (click)="loadFilteredEvents()">Generate Results</button>
+<!--                <label>-->
+<!--                    Select Country-->
+<!--                    <select [(ngModel)]="selectedCountry">-->
+<!--                        <option value="">Nothing selected</option>-->
+<!--                        <option *ngFor="let c of countries" [value]="c">{{ c }}</option>-->
+<!--                    </select>-->
+<!--                </label>-->
+
+<!--                <label>-->
+<!--                    Event Type-->
+<!--                    <select [(ngModel)]="eventType">-->
+<!--                        <option value="">Nothing selected</option>-->
+<!--                        <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>-->
+<!--                    </select>-->
+<!--                </label>-->
+
+<!--                <button class="btn" (click)="loadFilteredEvents()">Generate Results</button>-->
+
+<!--            </div>-->
+
+<!--            <div class="actions-dropdown">-->
+<!--                <button class="btn action-btn" (click)="toggleActionMenu()">Action ▼</button>-->
+<!--                <div *ngIf="showActionMenu" class="dropdown-menu">-->
+<!--                    <button (click)="printCalendar()">🖨 Print</button>-->
+<!--                    <button (click)="openNewEventModal()">➕ New Event</button>-->
+<!--                    <button (click)="openNewLeaveModal()">➕ New Leave</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <full-calendar #fullcalendar [options]="calendarOptions"></full-calendar>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; MODAL &ndash;&gt;-->
+<!--<app-event-modal-->
+<!--        *ngIf="showEventModal"-->
+<!--        (close)="showEventModal = false"-->
+<!--        (eventCreated)="addEventToCalendar($event)">-->
+<!--</app-event-modal>-->
+
+<!--<div *ngIf="showEventModal" class="modal-overlay" (click)="showEventModal = false"></div>-->
+<div class="page-container">
+    <!-- LÉGENDE À GAUCHE -->
+    <div class="legend-sidebar">
+        <h3>Event Legend</h3>
+        <div class="legend-list">
+            <div class="legend-item"><span class="legend-color audits"></span> Audits</div>
+            <div class="legend-item"><span class="legend-color trainings"></span> Trainings</div>
+            <div class="legend-item"><span class="legend-color leaves"></span> Leaves</div>
+            <div class="legend-item"><span class="legend-color others"></span> Others</div>
+            <div class="legend-item"><span class="legend-color holiday"></span> Holiday</div>
+            <div class="legend-item"><span class="legend-color foures"></span> 4Es</div>
+        </div>
     </div>
 
-    <div class="actions-dropdown">
-        <button class="btn action-btn" (click)="toggleActionMenu()">Action ▼</button>
-        <div *ngIf="showActionMenu" class="dropdown-menu">
-            <button (click)="printCalendar()">🖨 Print</button>
-            <button (click)="openNewEventModal()">➕ New Event</button>
-            <button (click)="openNewLeaveModal()">➕ New Leave</button>
+    <!-- CALENDRIER À DROITE -->
+    <div class="calendar-container">
+        <div class="calendar-toolbar">
+            <div class="filters">
+                <label>
+                    Select Users
+                    <select [(ngModel)]="selectedUser">
+                        <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
+                    </select>
+                </label>
+
+                <label>
+                    Select Country
+                    <select [(ngModel)]="selectedCountry">
+                        <option value="">Nothing selected</option>
+                        <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+                    </select>
+                </label>
+
+                <label>
+                    Event Type
+                    <select [(ngModel)]="eventType">
+                        <option value="">Nothing selected</option>
+                        <option *ngFor="let type of eventTypes" [value]="type">{{ type }}</option>
+                    </select>
+                </label>
+
+                <button class="btn" (click)="loadFilteredEvents()">Generate Results</button>
+            </div>
+
+            <div class="actions-dropdown">
+                <button class="btn action-btn" (click)="toggleActionMenu()">Action ▼</button>
+                <div *ngIf="showActionMenu" class="dropdown-menu">
+                    <button (click)="printCalendar()">🖨 Print</button>
+                    <button (click)="openNewEventModal()">➕ New Event</button>
+                    <button (click)="openNewLeaveModal()">➕ New Leave</button>
+                </div>
+            </div>
         </div>
+
+        <full-calendar #fullcalendar [options]="calendarOptions"></full-calendar>
     </div>
 </div>
 
-<div *ngIf="showEventModal" class="modal-overlay" (click)="showEventModal = false"></div>
-
-<full-calendar #fullcalendar [options]="calendarOptions"></full-calendar>
-
+<!-- MODAL -->
 <app-event-modal
         *ngIf="showEventModal"
         (close)="showEventModal = false"
         (eventCreated)="addEventToCalendar($event)">
 </app-event-modal>
+
+<div *ngIf="showEventModal" class="modal-overlay" (click)="showEventModal = false"></div>

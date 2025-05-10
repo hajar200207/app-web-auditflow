@@ -1,1 +1,95 @@
-<p>tasks works!</p>
+<div style="margin: 20px 0;">
+    <button class="btn submit" (click)="openModal()">+ New Task</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" *ngIf="showModal">
+    <div class="task-modal">
+        <h3>{{ taskForm.editMode ? 'Edit Task' : 'New Task' }}</h3>
+
+        <!-- Name -->
+        <label for="name">Task Name</label>
+        <div class="input-group">
+            <i class="fa fa-file icon"></i>
+            <input type="text" id="name" [(ngModel)]="taskForm.name" placeholder="Enter task name" />
+        </div>
+
+        <!-- Description -->
+        <label for="desc">Task Description</label>
+        <div class="input-group">
+            <i class="fa fa-tasks icon"></i>
+            <input type="text" id="desc" [(ngModel)]="taskForm.description" placeholder="Enter task description" />
+        </div>
+
+        <!-- Type + Assigned To -->
+        <div class="form-row">
+            <div>
+                <label>Task Type</label>
+                <select [(ngModel)]="taskForm.type">
+                    <option value="Call">Call</option>
+                    <option value="Meeting">Meeting</option>
+                    <option value="Email">Email</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Assigned To</label>
+                <select [(ngModel)]="taskForm.assignedTo">
+                    <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Dates -->
+        <label>Start - Finish Date</label>
+        <div class="input-group">
+            <i class="fa fa-calendar icon"></i>
+            <input type="date" [(ngModel)]="taskForm.startDate" />
+            <input type="date" [(ngModel)]="taskForm.endDate" />
+        </div>
+
+        <!-- Action buttons -->
+        <div class="modal-actions">
+            <button class="btn cancel" (click)="showModal = false">Close</button>
+            <button class="btn submit" (click)="submitTask()">
+                {{ taskForm.editMode ? 'Update' : 'Submit' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrapper">
+    <table class="task-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Assigned To</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let task of tasks">
+            <td>{{ task.name }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.type }}</td>
+            <td>{{ task.assignedTo?.username }}</td>
+            <td>{{ task.startDate }}</td>
+            <td>{{ task.endDate }}</td>
+            <td>
+                <button class="btn small edit" (click)="editTask(task)">Edit</button>
+                <button class="btn small delete" (click)="deleteTask(task.id)">Supprimer</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Empty state -->
+<div *ngIf="tasks.length === 0" style="margin-top: 20px; color: #888; text-align: center;">
+    No tasks available.
+</div>

@@ -1,0 +1,54 @@
+.supplier-audit-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.supplier-audit-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.supplier-audit-form input,
+.supplier-audit-form select {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.supplier-audit-form .full-width {
+    grid-column: span 2;
+}
+
+.buttons {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.buttons button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.buttons .submit-btn {
+    background-color: teal;
+    color: white;
+}
+
+.buttons .close-btn {
+    background-color: #666;
+    color: white;
+}

@@ -1,19 +1,109 @@
+
+.page-container {
+    display: flex;
+    padding: 20px;
+    gap: 30px;
+}
+
+.legend-sidebar {
+    width: 220px;
+    border-right: 1px solid #ddd;
+}
+
+.legend-sidebar h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.legend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* Couleurs des pastilles de légende (match les classes FullCalendar) */
+.legend-color.audits        { background-color: #3498db; }
+.legend-color.trainings     { background-color: #f1c40f; }
+.legend-color.leaves        { background-color: #2ecc71; }
+.legend-color.others        { background-color: #9b59b6; }
+.legend-color.holiday       { background-color: #e67e22; }
+.legend-color.foures        { background-color: #34495e; }
+
+.calendar-container {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Couleurs d'événements dans le calendrier */
+.fc-event.fc-event-audits {
+    background-color: #3498db !important;
+    border: none !important;
+    color: #fff !important;
+}
+.fc-event.fc-event-trainings {
+    background-color: #f1c40f !important;
+    border: none !important;
+    color: #000 !important;
+}
+.fc-event.fc-event-leaves {
+    background-color: #2ecc71 !important;
+    border: none !important;
+    color: #fff !important;
+}
+.fc-event.fc-event-others {
+    background-color: #9b59b6 !important;
+    border: none !important;
+    color: #fff !important;
+}
+
+.fc-event.fc-event-holiday {
+    background-color: #e67e22 !important;
+    border: none !important;
+    color: #fff !important;
+}
+.fc-event.fc-event-4es {
+    background-color: #34495e !important;
+    border: none !important;
+    color: #fff !important;
+}
+
+/* Toolbar et filtres */
 .calendar-toolbar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap;
     margin-bottom: 15px;
+}
+
+.filters {
+    display: flex;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
 .filters label {
-    margin-right: 15px;
     font-weight: 500;
+    font-size: 14px;
 }
 
 .filters select {
-    margin-left: 5px;
     padding: 4px 10px;
+    font-size: 14px;
 }
 
 .btn {
@@ -23,7 +113,6 @@
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: 10px;
 }
 
 .actions-dropdown {
@@ -37,7 +126,7 @@
     top: 100%;
     right: 0;
     padding: 10px;
-    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -49,20 +138,16 @@
     padding: 5px;
     text-align: left;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .dropdown-menu button:hover {
     background-color: #f0f0f0;
 }
 
-
-body {
-    overflow: visible;
-}
 .modal-overlay {
     position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.4);
     z-index: 9998;
 }
-

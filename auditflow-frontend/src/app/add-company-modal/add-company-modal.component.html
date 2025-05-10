@@ -1,0 +1,33 @@
+<!-- add-company-modal.component.html -->
+<div class="modal-overlay" (click)="closeModal()"></div>
+<div class="modal-form">
+    <h2>New Company</h2>
+    <form (ngSubmit)="submitCompany()" #companyForm="ngForm">
+
+        <div class="form-section">
+            <label>Company Name</label>
+            <input name="name" [(ngModel)]="company.name" required />
+
+            <label>Address</label>
+            <input name="address" [(ngModel)]="company.address" />
+
+            <label>Country</label>
+            <input name="country" [(ngModel)]="company.country" />
+
+            <label>Sector</label>
+            <input name="sector" [(ngModel)]="company.sector" />
+
+            <label>Phone</label>
+            <input name="phone" [(ngModel)]="company.phone" />
+
+            <label>Email</label>
+            <input name="email" [(ngModel)]="company.email" />
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" (click)="closeModal()">Cancel</button>
+            <button type="submit" [disabled]="companyForm.invalid">Submit</button>
+        </div>
+
+    </form>
+</div>
