@@ -1,0 +1,83 @@
+<div class="audit-package-container">
+    <h2>Create Audit Package</h2>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="loading-indicator">
+        <p>Chargement en cours...</p>
+    </div>
+
+    <!-- Download template button -->
+    <div class="template-section">
+        <h3>1. Télécharger le modèle</h3>
+        <button
+                (click)="downloadTemplate()"
+                [disabled]="isLoading"
+                class="btn btn-primary">
+            {{ isLoading ? 'Téléchargement...' : 'Télécharger le Template Certificate' }}
+        </button>
+        <p class="help-text">Cliquez pour télécharger le modèle de certificat à modifier.</p>
+    </div>
+
+    <!-- Upload modified certificate -->
+    <div class="upload-section">
+        <h3>2. Uploader le certificat modifié</h3>
+        <div class="file-input-group">
+            <label for="certificateFile">Sélectionner le fichier modifié :</label>
+            <input
+                    type="file"
+                    id="certificateFile"
+                    (change)="onFileSelected($event)"
+                    accept=".docx,.pdf"
+                    [disabled]="isLoading" />
+        </div>
+        <button
+                (click)="uploadFile()"
+                [disabled]="!selectedFile || isLoading"
+                class="btn btn-success">
+            {{ isLoading ? 'Upload en cours...' : 'Upload' }}
+        </button>
+        <p class="help-text">Sélectionnez votre certificat modifié (.docx ou .pdf)</p>
+    </div>
+
+    <!-- Re-download uploaded certificate -->
+    <div *ngIf="uploadedFileName" class="download-section">
+        <h3>3. Télécharger le certificat uploadé</h3>
+        <div class="success-message">
+            <p>✅ Fichier uploadé avec succès : <strong>{{ uploadedFileName }}</strong></p>
+        </div>
+        <button
+                (click)="downloadUploadedFile()"
+                [disabled]="isLoading"
+                class="btn btn-secondary">
+            {{ isLoading ? 'Téléchargement...' : 'Télécharger le Certificat Uploadé' }}
+        </button>
+    </div>
+
+    <!-- History section -->
+    <div class="history-section">
+        <button
+                (click)="toggleHistory()"
+                class="btn btn-info">
+            {{ showHistory ? 'Masquer l\'historique' : 'Afficher l\'historique des activités' }}
+        </button>
+
+        <div *ngIf="showHistory" class="history-content">
+            <h3>Historique des activités</h3>
+            <div *ngIf="userHistory.length === 0" class="no-history">
+                <p>Aucune activité enregistrée.</p>
+            </div>
+            <div *ngIf="userHistory.length > 0" class="history-list">
+                <div *ngFor="let activity of userHistory" class="history-item">
+                    <div class="activity-info">
+                        <span class="activity-type" [class]="'type-' + activity.activityType.toLowerCase()">
+                            {{ activity.activityType }}
+                        </span>
+                        <span class="activity-file">{{ activity.fileName }}</span>
+                        <span class="activity-date">{{ formatDate(activity.timestamp) }}</span>
+                    </div>
+                    <div class="activity-description">{{ activity.description }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

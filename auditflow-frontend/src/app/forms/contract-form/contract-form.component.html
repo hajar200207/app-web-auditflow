@@ -1,0 +1,466 @@
+<!-- contract-form.component.html -->
+<div class="contract-form container mt-4" [class.disabled]="disabled">
+    <h2 class="mb-4">Contract Information</h2>
+
+    <!-- Disabled Form Warning -->
+    <div class="form-warning" *ngIf="disabled">
+        <div class="alert alert-info">
+            <i class="fa fa-lock"></i>
+            <strong>Step Completed:</strong> This step has been completed and is now locked for editing.
+            All data is preserved for review.
+        </div>
+    </div>
+
+    <!-- Form Status Indicator -->
+    <div class="form-status mb-4" [class.valid]="isFormValid()" [class.disabled]="disabled">
+        <div class="status-indicator">
+            <i class="fa fa-check-circle text-success" *ngIf="isFormValid()"></i>
+            <i class="fa fa-exclamation-circle text-warning" *ngIf="!isFormValid()"></i>
+            <span class="status-text">
+                <span *ngIf="isFormValid() && !disabled" class="text-success">All requirements completed</span>
+                <span *ngIf="!isFormValid() && !disabled" class="text-warning">
+                    Please complete all required fields and upload required documents
+                </span>
+                <span *ngIf="disabled" class="text-info">Contract phase completed</span>
+            </span>
+            <div class="requirements-summary" *ngIf="!disabled">
+                Required documents uploaded: {{ getRequiredDocumentsStatus() }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Contract Details Form -->
+    <div class="contract-details-form">
+        <!-- Requested Certificates Languages -->
+        <div class="form-group mb-3">
+            <label for="certLang" class="form-label">Add Requested Certificates Languages</label>
+            <input
+                    type="text"
+                    id="certLang"
+                    class="form-control"
+                    [(ngModel)]="opportunity.certLang"
+                    [disabled]="disabled"
+                    (ngModelChange)="onFieldChange('certLang', $event)"
+                    placeholder="e.g., English, French, Arabic">
+        </div>
+
+        <!-- Certificate Validity -->
+        <div class="form-group mb-3">
+            <label for="certValidity" class="form-label">Certificate Validity (1 or 3 years)</label>
+            <select
+                    id="certValidity"
+                    class="form-select"
+                    [(ngModel)]="opportunity.certValidity"
+                    [disabled]="disabled"
+                    (ngModelChange)="onFieldChange('certValidity', $event)">
+                <option value="1">1 YEAR</option>
+                <option value="3">3 YEARS</option>
+            </select>
+        </div>
+
+        <!-- Expected Date -->
+        <div class="form-group mb-3">
+            <label for="expectedDate" class="form-label required">Expected Date *</label>
+            <input
+                    type="date"
+                    id="expectedDate"
+                    class="form-control"
+                    [(ngModel)]="opportunity.expectedDate"
+                    [disabled]="disabled"
+                    (ngModelChange)="onFieldChange('expectedDate', $event)"
+                    required>
+        </div>
+
+        <!-- Assign First Audit Code -->
+        <div class="form-group mb-3">
+            <label for="auditCode" class="form-label required">Assign First Audit Code *</label>
+            <select
+                    id="auditCode"
+                    class="form-select"
+                    [(ngModel)]="opportunity.auditCode"
+                    [disabled]="disabled"
+                    (ngModelChange)="onFieldChange('auditCode', $event)"
+                    required>
+                <option value="">Select audit stage...</option>
+                <option value="Stage 1">Stage 1</option>
+                <option value="Stage 2">Stage 2</option>
+            </select>
+        </div>
+
+        <!-- Prepare Welcome Letter -->
+        <div class="form-group mb-4">
+            <div class="form-check">
+                <input
+                        type="checkbox"
+                        id="prepareWelcomeLetter"
+                        class="form-check-input"
+                        [(ngModel)]="opportunity.prepareWelcomeLetter"
+                        [disabled]="disabled"
+                        (ngModelChange)="onFieldChange('prepareWelcomeLetter', $event)">
+                <label class="form-check-label" for="prepareWelcomeLetter">
+                    Prepare Welcome Letter
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documents Upload Section -->
+    <div class="documents-section">
+        <h3 class="mb-3">Required Documents</h3>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-header">
+                <tr>
+                    <th>Document Type</th>
+                    <th>Template</th>
+                    <th>Upload Document</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let doc of documentTypes" [class.required-doc]="doc.required">
+                    <td>
+                        <span [class.text-danger]="doc.required">{{ doc.label }}</span>
+                        <span *ngIf="doc.required" class="required-asterisk">*</span>
+                    </td>
+                    <td>
+                        <a *ngIf="doc.templateUrl"
+                           [href]="doc.templateUrl"
+                           download
+                           class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-download"></i> Download Template
+                        </a>
+                        <span *ngIf="!doc.templateUrl" class="text-muted">No template</span>
+                    </td>
+                    <td>
+                        <input
+                                type="file"
+                                (change)="onFileSelected($event, doc.key)"
+                                [disabled]="disabled"
+                                class="form-control form-control-sm"
+                                accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    </td>
+                    <td>
+                        <div *ngIf="isDocumentUploaded(doc)" class="uploaded-file">
+                            <i class="fa fa-check-circle text-success"></i>
+                            <span *ngFor="let file of uploadedDocuments[doc.key]" class="file-info">
+                                <!-- Regular File (newly uploaded) -->
+                                <a *ngIf="isRegularFile(file)"
+                                   [href]="getFileUrl(file)"
+                                   target="_blank"
+                                   class="file-link">{{ file.name }}</a>
+
+                                <!-- Existing File (from backend) -->
+                                <span *ngIf="isExistingFile(file)" class="file-link existing-file">
+                                    <i class="fa fa-file"></i> {{ file.name }}
+                                </span>
+                            </span>
+                        </div>
+                        <div *ngIf="!isDocumentUploaded(doc)">
+                            <span [class]="doc.required ? 'text-danger' : 'text-muted'">
+                                <i [class]="doc.required ? 'fa fa-times-circle' : 'fa fa-circle-o'"></i>
+                                {{ doc.required ? 'Required - Not uploaded' : 'Optional - Not uploaded' }}
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Debug Information (only in development) -->
+    <div class="debug-section" *ngIf="!disabled" style="background: #f8f9fa; padding: 15px; margin: 20px 0; border: 1px solid #dee2e6;">
+        <h5>Debug Information</h5>
+        <div class="debug-info">
+            <p><strong>Form Valid:</strong> {{ isFormValid() }}</p>
+            <p><strong>Expected Date:</strong> {{ opportunity.expectedDate || 'Not set' }}</p>
+            <p><strong>Audit Code:</strong> {{ opportunity.auditCode || 'Not set' }}</p>
+            <p><strong>Required Docs Status:</strong> {{ getRequiredDocumentsStatus() }}</p>
+            <div *ngFor="let doc of documentTypes.slice(0, 3)">
+                <p><strong>{{ doc.label }}:</strong>
+                    Path: {{ getDocumentPath(doc) }} |
+                    File: {{ getDocumentFileName(doc) }} |
+                    Status: {{ getDocumentStatus(doc) }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Contract Button -->
+    <div class="action-buttons mt-4" *ngIf="!disabled && !opportunity?.contractCompleted">
+        <button
+                type="button"
+                class="btn btn-success btn-lg"
+                (click)="completeContract()"
+                [disabled]="!isFormValid() || saving">
+            <i class="fa fa-spinner fa-spin" *ngIf="saving"></i>
+            <i class="fa fa-check" *ngIf="!saving"></i>
+            {{ saving ? 'Processing...' : 'Complete Contract Phase' }}
+        </button>
+        <div *ngIf="!isFormValid()" class="validation-help mt-2">
+            <small class="text-warning">
+                <i class="fa fa-info-circle"></i>
+                Please complete all required fields and upload all required documents before proceeding.
+            </small>
+        </div>
+    </div>
+
+    <!-- Completion Status -->
+    <div class="completion-status mt-4" *ngIf="opportunity?.contractCompleted">
+        <div class="alert alert-success">
+            <i class="fa fa-check-circle"></i>
+            <strong>Contract Completed:</strong>
+            Contract phase was completed on {{ opportunity.contractCompletedAt | date: 'medium' }}
+        </div>
+    </div>
+</div>
+
+<style>
+    .contract-form {
+        max-width: 1000px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .contract-form.disabled {
+        background-color: #f5f5f5;
+        opacity: 0.9;
+    }
+
+    .contract-form h2, .contract-form h3 {
+        color: #444;
+        margin-bottom: 20px;
+    }
+
+    .form-warning {
+        margin-bottom: 20px;
+    }
+
+    .form-status {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .form-status.valid {
+        border-color: #28a745;
+        background-color: #f8fff9;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .status-indicator i {
+        font-size: 1.2em;
+    }
+
+    .requirements-summary {
+        font-size: 0.9em;
+        color: #666;
+        margin-left: auto;
+    }
+
+    .contract-details-form {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .form-label.required::after {
+        content: ' *';
+        color: #dc3545;
+    }
+
+    .required-asterisk {
+        color: #dc3545;
+        font-weight: bold;
+        margin-left: 5px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 6px;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .form-control:disabled,
+    .form-select:disabled {
+        background-color: #e9ecef;
+        opacity: 0.6;
+    }
+
+    .form-check-input {
+        margin-top: 0.25rem;
+    }
+
+    .form-check-label {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .documents-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .table {
+        margin-bottom: 0;
+        background-color: #fff;
+    }
+
+    .table-header th {
+        background-color: #007bff;
+        color: white;
+        font-weight: 600;
+        border: none;
+        padding: 12px;
+    }
+
+    .table td {
+        vertical-align: middle;
+        padding: 12px;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .required-doc {
+        background-color: #fff9f9;
+    }
+
+    .uploaded-file {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+    }
+
+    .file-link {
+        color: #28a745;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .file-link:hover {
+        text-decoration: underline;
+    }
+
+    .existing-file {
+        color: #17a2b8;
+        cursor: default;
+    }
+
+    .file-info {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .btn-outline-primary {
+        border-color: #007bff;
+        color: #007bff;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .action-buttons {
+        text-align: center;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+    }
+
+    .btn-success.btn-lg {
+        padding: 12px 30px;
+        font-size: 1.1em;
+        font-weight: 600;
+    }
+
+    .validation-help {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .completion-status {
+        text-align: center;
+    }
+
+    .alert {
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .text-success {
+        color: #28a745 !important;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
+    }
+
+    .text-info {
+        color: #17a2b8 !important;
+    }
+
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    .debug-section {
+        border-radius: 8px;
+        font-size: 0.9em;
+    }
+
+    .debug-info p {
+        margin: 5px 0;
+    }
+</style>

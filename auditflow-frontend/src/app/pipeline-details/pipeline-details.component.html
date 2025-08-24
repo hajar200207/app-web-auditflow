@@ -1,0 +1,242 @@
+<!-- pipeline-details.component.html -->
+<app-pipeline-chat
+        [opportunityId]="opportunityId"
+        [currentStep]="currentStep"
+        [currentUserRole]="currentUserRole"
+        [opportunity]="opportunity">
+</app-pipeline-chat>
+
+<div class="pipeline-details-container" *ngIf="!loading">
+    <div class="pipeline-header">
+        <h2>Sales Pipeline: Step {{ currentStep + 1 }} - {{ steps[currentStep] }}</h2>
+        <div class="user-role-badge" [class]="currentUserRole">
+            {{ currentUserRole === 'admin' ? 'Admin View' : 'Auditor View' }}
+        </div>
+    </div>
+
+    <!-- Company and Opportunity Info Header -->
+    <div class="opportunity-info-header">
+        <div class="company-info">
+            <h3>{{ opportunity.company?.name || 'Company Name' }}</h3>
+            <p><strong>Opportunity:</strong> {{ opportunity.opportunityName }}</p>
+            <p><strong>Standard:</strong> {{ opportunity.standard }}</p>
+            <p><strong>Estimated Value:</strong> {{ opportunity.estimatedValue || 0 }} $</p>
+            <p><strong>Sales Rep:</strong> {{ opportunity.assignedAuditor }}</p>
+        </div>
+
+        <!-- Save Status Indicator -->
+        <div class="save-status" *ngIf="isAuditor">
+            <div class="save-indicator" *ngIf="isSaving">
+                <i class="fa fa-spinner fa-spin"></i> Saving...
+            </div>
+            <div class="last-saved" *ngIf="lastSaved && !isSaving">
+                Last saved: {{ formatDate(lastSaved.toISOString()) }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Step Progress Overview (Admin View) -->
+    <div class="admin-overview" *ngIf="isAdmin">
+        <h3>Progress Overview</h3>
+        <div class="steps-overview">
+            <div class="step-overview-card"
+                 *ngFor="let step of steps; let i = index"
+                 [class.completed]="stepCompletionStates[i]"
+                 [class.active]="i === currentStep">
+                <div class="step-header">
+                    <h4>{{ i + 1 }}. {{ step }}</h4>
+                    <div class="completion-status">
+                        <i class="fa fa-check-circle text-success" *ngIf="stepCompletionStates[i]"></i>
+                        <i class="fa fa-clock-o text-warning" *ngIf="stepValidationStates[i] && !stepCompletionStates[i]"></i>
+                        <i class="fa fa-circle-o text-muted" *ngIf="!stepValidationStates[i] && !stepCompletionStates[i]"></i>
+                    </div>
+                </div>
+
+                <div class="step-details" *ngIf="stepCompletionStates[i]">
+                    <p><strong>Completed by:</strong> {{ stepCompletionMetadata[i]?.completedBy || 'Unknown' }}</p>
+                    <p><strong>Completed at:</strong> {{ formatDate(stepCompletionMetadata[i]?.completedAt || '') }}</p>
+                    <button class="btn btn-sm btn-warning" (click)="unlockStep(i)">
+                        <i class="fa fa-unlock"></i> Unlock Step
+                    </button>
+                </div>
+
+                <div class="step-summary">
+                    <div class="form-data" *ngFor="let item of getStepData(i) | keyvalue">
+                        <span class="field-name">{{ item.key }}:</span>
+                        <span class="field-value">{{ item.value }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step Navigation Buttons -->
+    <div class="step-buttons">
+        <button *ngFor="let step of steps; let i = index"
+                [disabled]="i > maxStepReached"
+                [class.active]="i === currentStep"
+                [class.completed]="stepCompletionStates[i]"
+                [class.valid]="stepValidationStates[i] && !stepCompletionStates[i]"
+                [class.locked]="stepCompletionStates[i] && isAuditor"
+                (click)="goToStep(i)">
+
+            <!-- Step Status Icons -->
+            <i class="fa fa-lock text-warning" *ngIf="stepCompletionStates[i] && isAuditor"></i>
+            <i class="fa fa-check-circle text-success" *ngIf="stepCompletionStates[i] && isAdmin"></i>
+            <i class="fa fa-exclamation-circle text-warning" *ngIf="stepValidationStates[i] && !stepCompletionStates[i]"></i>
+            <i class="fa fa-circle-o text-muted" *ngIf="!stepValidationStates[i] && !stepCompletionStates[i]"></i>
+
+            <span class="step-text">{{ i + 1 }}. {{ step }}</span>
+
+            <!-- Step Lock Indicator -->
+            <div class="step-lock-info" *ngIf="stepCompletionStates[i]">
+                <small>Completed by {{ stepCompletionMetadata[i]?.completedBy }}</small>
+            </div>
+        </button>
+    </div>
+
+    <!-- Lock Warning (Auditor View) -->
+    <div class="lock-warning" *ngIf="isStepLocked() && isAuditor">
+        <div class="alert alert-warning">
+            <i class="fa fa-lock"></i>
+            <strong>Step Locked:</strong> This step has been completed and cannot be modified.
+            Contact an administrator if changes are needed.
+        </div>
+    </div>
+
+    <!-- Step Content Forms -->
+    <div class="step-content" [class.locked]="isStepLocked()">
+        <app-opportunity-review-form
+                *ngIf="currentStep === 0"
+                [opportunity]="opportunity"
+                (opportunityChange)="onOpportunityChange($event)"
+                [disabled]="isStepLocked()">
+        </app-opportunity-review-form>
+
+        <app-potential-application-form
+                *ngIf="currentStep === 1"
+                [opportunity]="opportunity"
+                (opportunityChange)="onOpportunityChange($event)"
+                [disabled]="isStepLocked()">
+        </app-potential-application-form>
+
+        <app-proposal-form
+                *ngIf="currentStep === 2"
+                [opportunity]="opportunity"
+                (opportunityChange)="onOpportunityChange($event)"
+                (validationChange)="onStepValidationChange(2, $event)"
+                [disabled]="isStepLocked()">
+        </app-proposal-form>
+
+        <app-negotiation-form
+                *ngIf="currentStep === 3"
+                [opportunity]="opportunity"
+                (opportunityChange)="onOpportunityChange($event)"
+                [disabled]="isStepLocked()">
+        </app-negotiation-form>
+
+        <app-contract-form
+                *ngIf="currentStep === 4"
+                [opportunity]="opportunity"
+                (opportunityChange)="onOpportunityChange($event)"
+                [disabled]="isStepLocked()">
+        </app-contract-form>
+    </div>
+
+    <!-- Step Completion Summary (Current Step) -->
+    <div class="step-completion-summary" *ngIf="stepValidationStates[currentStep]">
+        <div class="completion-card" [class.completed]="stepCompletionStates[currentStep]">
+            <h4>{{ steps[currentStep] }} - Completion Status</h4>
+
+            <div class="completion-details" *ngIf="!stepCompletionStates[currentStep] && isAuditor">
+                <p class="text-success">
+                    <i class="fa fa-check"></i> All requirements met. Ready to complete this step.
+                </p>
+                <button class="btn btn-success" (click)="markStepAsCompleted(currentStep)">
+                    <i class="fa fa-lock"></i> Complete & Lock Step
+                </button>
+            </div>
+
+            <div class="completion-details" *ngIf="stepCompletionStates[currentStep]">
+                <p class="text-info">
+                    <i class="fa fa-check-circle"></i> Step completed by {{ stepCompletionMetadata[currentStep]?.completedBy }}
+                    on {{ formatDate(stepCompletionMetadata[currentStep]?.completedAt || '') }}
+                </p>
+                <button class="btn btn-warning" (click)="unlockStep(currentStep)" *ngIf="isAdmin">
+                    <i class="fa fa-unlock"></i> Unlock Step
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+        <button class="btn btn-secondary" (click)="goBackToPipeline()">
+            <i class="fa fa-arrow-left"></i> Back to Pipeline
+        </button>
+
+        <!-- Admin Save Button -->
+        <button class="btn btn-primary" (click)="saveCurrentStep()" *ngIf="isAdmin">
+            <i class="fa fa-save"></i> Save Changes
+        </button>
+
+        <div class="step-navigation">
+            <button
+                    class="btn btn-primary"
+                    (click)="updateStepValidation(); nextStep()"
+                    [disabled]="currentStep === steps.length - 1 || !stepValidationStates[currentStep]"
+                    *ngIf="currentStep < steps.length - 1">
+                Next Step <i class="fa fa-arrow-right"></i>
+            </button>
+
+            <button
+                    class="btn btn-success"
+                    (click)="markStepAsCompleted(currentStep)"
+                    [disabled]="!stepValidationStates[currentStep] || stepCompletionStates[currentStep]"
+                    *ngIf="currentStep === steps.length - 1 && isAuditor">
+                <i class="fa fa-flag-checkered"></i> Complete Pipeline
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+        <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="((currentStep + 1) / steps.length) * 100"></div>
+        </div>
+
+    </div>
+
+    <!-- Data Summary for Admin -->
+    <div class="admin-data-summary" *ngIf="isAdmin">
+        <h3>Complete Data Summary</h3>
+        <div class="data-summary-grid">
+            <div class="data-section" *ngFor="let step of steps; let i = index">
+                <h4>{{ i + 1 }}. {{ step }}</h4>
+                <div class="data-table">
+                    <div class="data-row" *ngFor="let item of getStepData(i) | keyvalue">
+                        <span class="data-label">{{ item.key }}:</span>
+                        <span class="data-value" [class.empty]="!item.value || item.value === 'Non renseigné'">
+                            {{ item.value || 'Not provided' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="step-metadata" *ngIf="stepCompletionStates[i]">
+                    <small class="text-muted">
+                        <i class="fa fa-user"></i> {{ stepCompletionMetadata[i]?.completedBy }} |
+                        <i class="fa fa-calendar"></i> {{ formatDate(stepCompletionMetadata[i]?.completedAt || '') }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="loading">
+    <div class="loading-spinner">
+        <i class="fa fa-spinner fa-spin"></i>
+        <p>Loading opportunity details...</p>
+    </div>
+</div>
+

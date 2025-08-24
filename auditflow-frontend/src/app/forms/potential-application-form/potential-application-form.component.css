@@ -1,0 +1,73 @@
+.form-section {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #f7f9fc;
+    border: 1px solid #b0c4de;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.form-section h4 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.form-section label {
+    display: block;
+    margin-bottom: 18px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-section input[type="text"],
+.form-section input[type="date"],
+.form-section input[type="number"],
+.form-section input[type="file"],
+.form-section select,
+.form-section textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 6px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.form-section input[type="text"]:focus,
+.form-section input[type="date"]:focus,
+.form-section input[type="number"]:focus,
+.form-section input[type="file"]:focus,
+.form-section select:focus,
+.form-section textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #f0f8ff;
+}
+
+.form-section input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+    vertical-align: middle;
+}
+
+.form-section textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+@media (max-width: 768px) {
+    .form-section {
+        padding: 20px;
+    }
+
+    .form-section h4 {
+        font-size: 20px;
+    }
+}

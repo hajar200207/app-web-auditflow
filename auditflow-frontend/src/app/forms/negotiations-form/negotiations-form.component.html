@@ -1,0 +1,139 @@
+<div class="checklist-container">
+    <form id="checklistForm" class="checklist-form">
+        <!-- Left Column -->
+        <div class="column left-column">
+            <div
+                    class="checkbox-group"
+                    *ngFor="let item of [
+          { id: 'competitorsDefined', label: 'Competitors Defined' },
+          { id: 'pricingIntelligence', label: 'Pricing Intelligence' },
+          { id: 'changesInProposalDays', label: 'Changes in Proposal Days?' },
+          { id: 'requestApprovalRevisedContract', label: 'Request Approval on Revised Contract Review' },
+          { id: 'reviseProposal', label: 'Revise Proposal' },
+          { id: 'mergeRevisedProposal', label: 'Merge Revised Proposal' }
+        ]"
+            >
+                <label class="checkbox-item">
+                    <input
+                            type="checkbox"
+                            [id]="item.id"
+                            [name]="item.id"
+                            [disabled]="disabled"
+                            [checked]="checkboxStates[item.id]"
+                            (change)="onCheckboxChange(item.id, $event)"
+                    />
+                    <span class="label-text">{{ item.label }}</span>
+                </label>
+            </div>
+
+            <!-- Client Final Decision -->
+            <div class="checkbox-group highlighted">
+                <label class="checkbox-item">
+                    <input
+                            type="checkbox"
+                            id="clientFinalDecision"
+                            name="clientFinalDecision"
+                            [checked]="clientDecisionChecked"
+                            (change)="onCheckboxChange('clientFinalDecision', $event)"
+                            [disabled]="disabled"
+                    />
+                    <span class="label-text required">Client Final Decision *</span>
+                </label>
+                <div class="quotation-info" *ngIf="clientDecisionDate">
+                    <small class="info-text"
+                    >Decision taken at: {{ clientDecisionDate }}</small
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="column right-column">
+            <!-- Upload Revised Contract Review -->
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input
+                            type="checkbox"
+                            id="uploadRevisedContractReview"
+                            name="uploadRevisedContractReview"
+                            [disabled]="disabled"
+                            [checked]="checkboxStates.uploadRevisedContractReview"
+                            (change)="onCheckboxChange('uploadRevisedContractReview', $event)"
+                    />
+                    <span class="label-text">Upload Revised Contract Review</span>
+                </label>
+
+                <!-- Upload Input -->
+                <input
+                        type="file"
+                        (change)="onFileUpload($event)"
+                        [disabled]="disabled"
+                        accept=".pdf,.doc,.docx,.txt"
+                />
+
+                <!-- Download Button -->
+                <button
+                        *ngIf="uploadedFileUrl || opportunity?.revisedContractReviewFileName"
+                        type="button"
+                        class="btn-download"
+                        (click)="downloadFile()"
+                        [disabled]="disabled"
+                >
+                    Download File
+                </button>
+
+                <!-- Show filename if exists -->
+                <small
+                        *ngIf="opportunity?.revisedContractReviewFileName"
+                        class="file-info"
+                >
+                    File: {{ opportunity.revisedContractReviewFileName }}
+                </small>
+            </div>
+
+            <!-- Other right side checkboxes -->
+            <div
+                    class="checkbox-group"
+                    *ngFor="let item of [
+          { id: 'approveRevisedContractReview', label: 'Approve Revised Contract Review' },
+          { id: 'attachRevisedProposal', label: 'Attach Revised Proposal' },
+          { id: 'requestQuotationChange', label: 'Request Quotation Change' }
+        ]"
+            >
+                <label class="checkbox-item">
+                    <input
+                            type="checkbox"
+                            [id]="item.id"
+                            [name]="item.id"
+                            [disabled]="disabled"
+                            [checked]="checkboxStates[item.id]"
+                            (change)="onCheckboxChange(item.id, $event)"
+                    />
+                    <span class="label-text">{{ item.label }}</span>
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <!-- Complete Negotiation Button -->
+    <div
+            class="action-buttons"
+            *ngIf="!disabled && !opportunity?.negotiationCompleted"
+    >
+        <button
+                type="button"
+                class="btn-complete"
+                (click)="completeNegotiation()"
+                [disabled]="!checkboxStates.clientFinalDecision || saving">
+            Complete Negotiation & Next
+        </button>
+    </div>
+
+    <!-- Completion Status -->
+    <div class="completion-status" *ngIf="opportunity?.negotiationCompleted">
+        <div class="status-completed">
+            ✓ Negotiation completed at:
+            {{ opportunity.negotiationCompletedAt | date: 'medium' }}
+        </div>
+    </div>
+</div>

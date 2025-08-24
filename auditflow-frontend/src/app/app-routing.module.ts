@@ -66,6 +66,11 @@ import { GuidanceDocumentComponent } from './guidance-document/guidance-document
 // Other
 import { ModuleDashboardComponent } from './module-dashboard/module-dashboard.component';
 import { AuditorsCardsComponent } from './auditors-cards/auditors-cards.component';
+import {PipelineDetailsComponent} from "./pipeline-details/pipeline-details.component";
+import {ProjectListComponent} from "./project-list/project-list.component";
+import {CreateAuditPackageComponent} from "./create-audit-package/create-audit-package.component";
+import {CreateAuditNoteComponent} from "./create-audit-note/create-audit-note.component";
+import {CreateCertificateRequestComponent} from "./create-certificate-request/create-certificate-request.component";
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -123,6 +128,9 @@ export const appRoutes: Routes = [
       { path: 'companies-info/company-details/:id', component: CompanyDetailComponent },
     ]
   },
+  { path: 'pipeline/:id', component: PipelineDetailsComponent },
+  { path: 'pipeline/:id/:stage', component: PipelineDetailsComponent },
+
 
   {
     path: 'dashboard-auditor',
@@ -174,6 +182,13 @@ export const appRoutes: Routes = [
       { path: 'audit-package-templates', component: AuditPackageTemplatesComponent },
       { path: 'sales-pipeline', component: SalesPipelineComponent },
       { path: 'guidance-document', component: GuidanceDocumentComponent },
+      { path: 'projects/:companyId', component: ProjectListComponent },
+      { path: 'audit-package/create/:projectId', component: CreateAuditPackageComponent },
+      { path: 'audit-note/create/:projectId', component: CreateAuditNoteComponent },
+      { path: 'certificate-request/create/:projectId', component: CreateCertificateRequestComponent },
+
+
+
     ]
   },
 ];

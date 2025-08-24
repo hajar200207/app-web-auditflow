@@ -1,51 +1,38 @@
-<!--<div class="pipeline-header">Sales Pipeline</div>-->
+<div class="pipeline-header">Sales Pipeline</div>
 
-<!--<div class="pipeline-container">-->
-<!--    <div class="stage" *ngFor="let stage of stages">-->
-<!--        <div class="stage-header">-->
-<!--            <div class="stage-number">{{ stage.number }}</div>-->
-<!--            <div class="stage-label">{{ stage.label }}</div>-->
-<!--        </div>-->
-
-<!--        <div *ngIf="getOpportunitiesByStage(stage.key).length === 0" class="empty">-->
-<!--            No Available Opp. as this stage-->
-<!--        </div>-->
-
-<!--        <div class="card" *ngFor="let opp of getOpportunitiesByStage(stage.key)">-->
-<!--            <strong>{{ opp.company.name }}</strong>-->
-<!--            <p><strong>{{ opp.opportunityName }}</strong></p>-->
-<!--            <p><strong>Standard:</strong> {{ opp.standard }}</p>-->
-<!--            <p><strong>Estimated Value ($):</strong> {{ opp.estimatedValue || 0 }} $</p>-->
-<!--            <p><strong>Sales Rep:</strong> {{ opp.assignedAuditor }}</p>-->
-<!--            <p><strong>Opportunity Type:</strong> CERTIFICATION</p>-->
-<!--            <p><strong>Certification Body:</strong> {{ opp.certificationBody }}</p>-->
-<!--            <p><strong>Type:</strong> {{ opp.type }}</p>-->
-<!--            <p><strong>Status:</strong> {{ opp.status }}</p>-->
-<!--            <p><strong>Date Created:</strong> {{ opp.auditExpectedDate | date }}</p>-->
-<!--            <p><strong>Last Date Modified:</strong> {{ opp.lastModified || '&#45;&#45;&#45;&#45;' }}</p>-->
-<!--            <a class="link">Go to pipeline ➔</a>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 <div class="pipeline-container">
     <div class="stage" *ngFor="let stage of stages">
-        <h3>{{ stage.number }} - {{ stage.label }}</h3>
+        <div class="stage-header">
+            <div class="stage-number">{{ stage.number }}</div>
+            <div class="stage-label">{{ stage.label }}</div>
+        </div>
 
         <div *ngIf="getOpportunitiesByStage(stage.key).length === 0" class="empty">
-            No Available Opp. as this stage
+            No Available Opp. at this stage
         </div>
 
         <div class="card" *ngFor="let opp of getOpportunitiesByStage(stage.key)">
-            <h4>{{ opp.company.name }}</h4>
+            <strong>{{ opp.company.name }}</strong>
             <p><strong>{{ opp.opportunityName }}</strong></p>
             <p><strong>Standard:</strong> {{ opp.standard }}</p>
+            <p><strong>Estimated Value:</strong> {{ opp.estimatedValue || 0 }} $</p>
             <p><strong>Sales Rep:</strong> {{ opp.assignedAuditor }}</p>
+            <p><strong>Opportunity Type:</strong> CERTIFICATION</p>
             <p><strong>Certification Body:</strong> {{ opp.certificationBody }}</p>
+            <p><strong>Type:</strong> {{ opp.type }}</p>
             <p><strong>Status:</strong> {{ opp.status }}</p>
-            <p><strong>Stage:</strong> {{ opp.stage }}</p>
+            <p><strong>Date Created:</strong> {{ opp.auditExpectedDate | date }}</p>
+            <p><strong>Last Modified:</strong> {{ opp.lastModified || '----' }}</p>
+            <!-- Utiliser `opp.id` pas `opportunity.id` -->
+            <button [routerLink]="['/pipeline', opp.id]" [queryParams]="{ stage: stage.key }">
+                Go to Pipeline
+            </button>
 
-            <!-- Admin can move cards -->
-            <div *ngIf="role === 'admin'">
+
+            <!-- Formulaires dynamiques spécifiques à l'étape -->
+
+            <!-- Admin can move opportunity -->
+            <div *ngIf="role === 'admin'" class="admin-controls">
                 <label>Move to:</label>
                 <select [(ngModel)]="opp.newStage">
                     <option *ngFor="let s of stages" [value]="s.key">{{ s.label }}</option>

@@ -1,27 +1,38 @@
-<!-- add-company-modal.component.html -->
 <div class="modal-overlay" (click)="closeModal()"></div>
 <div class="modal-form">
     <h2>New Company</h2>
     <form (ngSubmit)="submitCompany()" #companyForm="ngForm">
 
         <div class="form-section">
-            <label>Company Name</label>
-            <input name="name" [(ngModel)]="company.name" required />
+            <div class="form-row">
+                <label for="name">Company Name</label>
+                <input id="name" name="name" [(ngModel)]="company.name" required />
+            </div>
 
-            <label>Address</label>
-            <input name="address" [(ngModel)]="company.address" />
+            <div class="form-row">
+                <label for="address">Address</label>
+                <input id="address" name="address" [(ngModel)]="company.address" />
+            </div>
 
-            <label>Country</label>
-            <input name="country" [(ngModel)]="company.country" />
+            <div class="form-row">
+                <label for="country">Country</label>
+                <input id="country" name="country" [(ngModel)]="company.country" />
+            </div>
 
-            <label>Sector</label>
-            <input name="sector" [(ngModel)]="company.sector" />
+            <div class="form-row">
+                <label for="sector">Sector</label>
+                <input id="sector" name="sector" [(ngModel)]="company.sector" />
+            </div>
 
-            <label>Phone</label>
-            <input name="phone" [(ngModel)]="company.phone" />
+            <div class="form-row">
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" [(ngModel)]="company.phone" />
+            </div>
 
-            <label>Email</label>
-            <input name="email" [(ngModel)]="company.email" />
+            <div class="form-row">
+                <label for="email">Email</label>
+                <input id="email" name="email" [(ngModel)]="company.email" />
+            </div>
         </div>
 
         <div class="modal-actions">
@@ -31,3 +42,95 @@
 
     </form>
 </div>
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+
+    .modal-form {
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        padding: 2rem;
+        width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        z-index: 1001;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-form h2 {
+        margin: 0 0 1rem 0;
+        text-align: center;
+    }
+
+    .form-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 2rem; /* vertical gap + horizontal gap */
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .form-row label {
+        width: 120px; /* fixed width for label so inputs align */
+        font-weight: 600;
+    }
+
+    .form-row input {
+        flex-grow: 1;
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .modal-actions button {
+        padding: 0.5rem 1.2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .modal-actions button:first-child {
+        background-color: #ccc;
+        color: #333;
+    }
+
+    .modal-actions button:first-child:hover {
+        background-color: #b3b3b3;
+    }
+
+    .modal-actions button:last-child {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .modal-actions button:last-child:hover {
+        background-color: #0056b3;
+    }
+</style>

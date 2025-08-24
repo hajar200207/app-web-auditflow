@@ -1,0 +1,286 @@
+<div class="form-section">
+    <h4>Potential Application Details</h4>
+
+    <label>
+        Generate & Upload Application
+        <input type="file"
+               (change)="onFileChange($event, 'applicationFile')"
+               accept=".pdf,.doc,.docx"
+               [disabled]="disabled">
+    </label>
+
+    <label>
+        Date Application Sent to Client *
+        <input type="date"
+               [(ngModel)]="opportunity.applicationSentDate"
+               (change)="notifyChange()"
+               [disabled]="disabled"
+               required>
+    </label>
+
+    <label>
+        Upload Transfer Documents *
+        <input type="file"
+               (change)="onFileChange($event, 'transferDocsFile')"
+               accept=".pdf,.doc,.docx"
+               [disabled]="disabled">
+    </label>
+
+    <label>
+        Upload FQ/Application filled by Client *
+        <input type="file"
+               (change)="onFileChange($event, 'fqApplicationFile')"
+               accept=".pdf,.doc,.docx"
+               [disabled]="disabled">
+    </label>
+
+    <label>
+        Upload Certification Change Form
+        <input type="file"
+               (change)="onFileChange($event, 'certificationChangeFile')"
+               accept=".pdf,.doc,.docx"
+               [disabled]="disabled">
+    </label>
+
+    <label>
+        Upload Client's Commercial Registration *
+        <input type="file"
+               (change)="onFileChange($event, 'commercialRegistrationFile')"
+               accept=".pdf,.doc,.docx"
+               [disabled]="disabled">
+    </label>
+
+    <label>
+        Define Scope
+        <textarea [(ngModel)]="opportunity.scope"
+                  (change)="notifyChange()"
+                  [disabled]="disabled"
+                  placeholder="Décrivez le scope de l'audit"></textarea>
+    </label>
+
+    <label>
+        Scope Exclusions
+        <textarea [(ngModel)]="opportunity.scopeExclusions"
+                  (change)="notifyChange()"
+                  [disabled]="disabled"
+                  placeholder="Précisez les exclusions du scope"></textarea>
+    </label>
+
+    <label>
+        FTE Number *
+        <input type="number"
+               [(ngModel)]="opportunity.fteNumber"
+               (change)="notifyChange()"
+               [disabled]="disabled"
+               min="1"
+               required>
+    </label>
+
+    <label>
+        Upload FTE Calculator
+        <input type="file"
+               (change)="onFileChange($event, 'fteCalculatorFile')"
+               accept=".pdf,.doc,.docx,.xls,.xlsx"
+               [disabled]="disabled">
+    </label>
+
+    <label>
+        Number of Shifts
+        <input type="number"
+               [(ngModel)]="opportunity.shiftCount"
+               (change)="notifyChange()"
+               [disabled]="disabled"
+               min="1">
+    </label>
+
+    <label>
+        Frequency of Audits *
+        <input type="text"
+               [(ngModel)]="opportunity.auditFrequency"
+               (change)="notifyChange()"
+               [disabled]="disabled"
+               placeholder="ex: Annuelle, Bi-annuelle"
+               required>
+    </label>
+
+    <label>
+        Define Sites & Processes
+        <textarea [(ngModel)]="opportunity.sitesProcesses"
+                  (change)="notifyChange()"
+                  [disabled]="disabled"
+                  placeholder="Décrivez les sites et processus à auditer"></textarea>
+    </label>
+
+    <label>
+        <input type="checkbox"
+               [(ngModel)]="opportunity.imsApplication"
+               (change)="notifyChange()"
+               [disabled]="disabled">
+        IMS Application
+    </label>
+
+    <label>
+        Set Target Audit Date *
+        <input type="date"
+               [(ngModel)]="opportunity.targetAuditDate"
+               (change)="notifyChange()"
+               [disabled]="disabled"
+               required>
+    </label>
+
+    <label>
+        Main Spoken Language *
+        <select [(ngModel)]="opportunity.mainLanguage"
+                (change)="notifyChange()"
+                [disabled]="disabled"
+                required>
+            <option value="">Select Language</option>
+            <option value="English">English</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="Arabic">Arabic</option>
+            <option value="German">German</option>
+        </select>
+    </label>
+
+    <label>
+        Consultant Relationship
+        <input type="text"
+               [(ngModel)]="opportunity.consultantRelation"
+               (change)="notifyChange()"
+               [disabled]="disabled"
+               placeholder="Relation avec consultant externe">
+    </label>
+
+    <label>
+        Refer a Training Solution
+        <input type="text"
+               [(ngModel)]="opportunity.trainingReferral"
+               (change)="notifyChange()"
+               [disabled]="disabled"
+               placeholder="Solution de formation recommandée">
+    </label>
+
+    <label>
+        Add Risk Level *
+        <select [(ngModel)]="opportunity.riskLevel"
+                (change)="notifyChange()"
+                [disabled]="disabled"
+                required>
+            <option value="">Select Risk Level</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+        </select>
+    </label>
+
+    <label>
+        IAF Category *
+        <select [(ngModel)]="opportunity.iafCategory"
+                (change)="notifyChange()"
+                [disabled]="disabled"
+                required>
+            <option value="">Select IAF Category</option>
+            <option value="Category 1">Category 1 - Agriculture, Fishing</option>
+            <option value="Category 2">Category 2 - Mining and quarrying</option>
+            <option value="Category 3">Category 3 - Food products, beverages</option>
+            <option value="Category 4">Category 4 - Textiles and textile products</option>
+            <option value="Category 5">Category 5 - Leather and leather products</option>
+            <!-- Add more categories as needed -->
+        </select>
+    </label>
+
+    <label>
+        Check Available Auditors
+        <textarea [(ngModel)]="opportunity.availableAuditors"
+                  (change)="notifyChange()"
+                  [disabled]="disabled"
+                  placeholder="Liste des auditeurs disponibles"></textarea>
+    </label>
+
+    <label>
+        Legal & Other Requirements *
+        <textarea [(ngModel)]="opportunity.legalRequirements"
+                  (change)="notifyChange()"
+                  [disabled]="disabled"
+                  placeholder="Exigences légales et autres requirements"
+                  required></textarea>
+    </label>
+
+    <label>
+        Upload Contract Review *
+        <input type="file"
+               (change)="onFileChange($event, 'contractReviewFile')"
+               accept=".pdf,.doc,.docx"
+               [disabled]="disabled">
+    </label>
+
+    <label>
+        <input type="checkbox"
+               [(ngModel)]="opportunity.contractReviewRequested"
+               (change)="notifyChange()"
+               [disabled]="disabled">
+        Request Contract Review Approval from Scheme Manager *
+    </label>
+
+    <label>
+        <input type="checkbox"
+               [(ngModel)]="opportunity.contractReviewApproved"
+               (change)="notifyChange()"
+               [disabled]="disabled">
+        Contract Review Approved *
+    </label>
+
+    <label>
+        Upload Approved Contract Review
+        <input type="file"
+               (change)="onFileChange($event, 'approvedContractReviewFile')"
+               accept=".pdf,.doc,.docx"
+               [disabled]="disabled">
+    </label>
+
+    <!-- Save Buttons -->
+    <div class="form-buttons">
+        <button class="btn btn-primary"
+                [disabled]="!isFormValid() || disabled || isSaving"
+                (click)="savePotentialApplication()">
+            <i class="fa fa-save" *ngIf="!isSaving"></i>
+            <i class="fa fa-spinner fa-spin" *ngIf="isSaving"></i>
+            {{ isSaving ? 'Saving...' : 'Save Step 2 (with Files)' }}
+        </button>
+
+        <!-- Alternative button for testing without files -->
+        <button class="btn btn-secondary"
+                [disabled]="!isFormValid() || disabled || isSaving"
+                (click)="savePotentialApplicationJson()">
+            <i class="fa fa-save" *ngIf="!isSaving"></i>
+            <i class="fa fa-spinner fa-spin" *ngIf="isSaving"></i>
+            {{ isSaving ? 'Saving...' : 'Save Step 2 (Data Only)' }}
+        </button>
+    </div>
+
+    <!-- Form Validation Status -->
+    <div class="form-status" *ngIf="!isFormValid()">
+        <div class="alert alert-warning">
+            <i class="fa fa-exclamation-triangle"></i>
+            <strong>Champs requis manquants:</strong>
+            <ul>
+                <li *ngIf="!opportunity.applicationSentDate">Date d'envoi de l'application</li>
+                <li *ngIf="!opportunity.fteNumber">Nombre FTE</li>
+                <li *ngIf="!opportunity.auditFrequency">Fréquence des audits</li>
+                <li *ngIf="!opportunity.targetAuditDate">Date cible d'audit</li>
+                <li *ngIf="!opportunity.mainLanguage">Langue principale</li>
+                <li *ngIf="!opportunity.riskLevel">Niveau de risque</li>
+                <li *ngIf="!opportunity.iafCategory">Catégorie IAF</li>
+                <li *ngIf="!opportunity.legalRequirements">Exigences légales</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Debug Information (pour le développement) -->
+    <div class="debug-info" *ngIf="false">
+        <h5>Debug Info:</h5>
+        <pre>{{ opportunity | json }}</pre>
+    </div>
+</div>

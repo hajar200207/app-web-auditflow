@@ -1,0 +1,102 @@
+/* Container */
+.checklist-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: #fdfdfd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Form layout */
+.checklist-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+/* Columns */
+.column {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Checkbox groups */
+.checkbox-group {
+    margin-bottom: 20px;
+}
+
+/* Checkbox item */
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #007bff;
+    cursor: pointer;
+}
+
+/* Highlighted section */
+.checkbox-group.highlighted {
+    background-color: #e9f5ff;
+    border-left: 4px solid #007bff;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+/* Required asterisk */
+.label-text.required::after {
+    content: " *";
+    color: red;
+}
+
+/* Quotation info */
+.quotation-info {
+    margin-top: 6px;
+    padding-left: 30px;
+}
+
+.quotation-info .info-text {
+    font-size: 13px;
+    color: #555;
+    font-style: italic;
+}
+
+/* Upload + Download */
+input[type="file"] {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.btn-download {
+    margin-top: 8px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-download:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .checklist-form {
+        flex-direction: column;
+    }
+}

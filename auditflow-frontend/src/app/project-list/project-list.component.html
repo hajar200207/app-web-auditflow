@@ -1,0 +1,3521 @@
+<!--
+&lt;!&ndash;
+&lt;!&ndash;&lt;!&ndash; project-list.component.html &ndash;&gt;&ndash;&gt;
+&lt;!&ndash;<div class="project-list-container">&ndash;&gt;
+&lt;!&ndash;    <div class="project-header">&ndash;&gt;
+&lt;!&ndash;        <h2>Projects for {{ companyName }}</h2>&ndash;&gt;
+&lt;!&ndash;        <div class="project-count">Total Projects: {{ projects.length }}</div>&ndash;&gt;
+&lt;!&ndash;    </div>&ndash;&gt;
+
+&lt;!&ndash;    &lt;!&ndash; Loading State &ndash;&gt;&ndash;&gt;
+&lt;!&ndash;    <div class="loading-container" *ngIf="loading">&ndash;&gt;
+&lt;!&ndash;        <i class="fa fa-spinner fa-spin"></i>&ndash;&gt;
+&lt;!&ndash;        <p>Loading projects...</p>&ndash;&gt;
+&lt;!&ndash;    </div>&ndash;&gt;
+
+&lt;!&ndash;    &lt;!&ndash; Empty State &ndash;&gt;&ndash;&gt;
+&lt;!&ndash;    <div class="empty-state" *ngIf="!loading && projects.length === 0">&ndash;&gt;
+&lt;!&ndash;        <i class="fa fa-folder-open-o"></i>&ndash;&gt;
+&lt;!&ndash;        <h3>No Projects Found</h3>&ndash;&gt;
+&lt;!&ndash;        <p>This company doesn't have any projects yet.</p>&ndash;&gt;
+&lt;!&ndash;        <button class="btn btn-primary" [routerLink]="['/sales-pipeline']">&ndash;&gt;
+&lt;!&ndash;            <i class="fa fa-plus"></i> Create New Opportunity&ndash;&gt;
+&lt;!&ndash;        </button>&ndash;&gt;
+&lt;!&ndash;    </div>&ndash;&gt;
+
+&lt;!&ndash;    &lt;!&ndash; Projects Table &ndash;&gt;&ndash;&gt;
+&lt;!&ndash;    <div class="projects-table" *ngIf="!loading && projects.length > 0">&ndash;&gt;
+&lt;!&ndash;        <table class="table table-bordered table-striped">&ndash;&gt;
+&lt;!&ndash;            <thead>&ndash;&gt;
+&lt;!&ndash;            <tr>&ndash;&gt;
+&lt;!&ndash;                <th>Project Name</th>&ndash;&gt;
+&lt;!&ndash;                <th>File Number</th>&ndash;&gt;
+&lt;!&ndash;                <th>Standard</th>&ndash;&gt;
+&lt;!&ndash;                <th>Assigned Auditor</th>&ndash;&gt;
+&lt;!&ndash;                <th>Status</th>&ndash;&gt;
+&lt;!&ndash;                <th>Type</th>&ndash;&gt;
+&lt;!&ndash;                <th>Created Date</th>&ndash;&gt;
+&lt;!&ndash;                <th>Estimated Value</th>&ndash;&gt;
+&lt;!&ndash;                <th>Actions</th>&ndash;&gt;
+&lt;!&ndash;            </tr>&ndash;&gt;
+&lt;!&ndash;            </thead>&ndash;&gt;
+&lt;!&ndash;            <tbody>&ndash;&gt;
+&lt;!&ndash;            <tr *ngFor="let project of projects; trackBy: trackByProjectId"&ndash;&gt;
+&lt;!&ndash;                [class]="getProjectStatusClass(project.status)">&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;                    <strong>{{ project.projectName }}</strong>&ndash;&gt;
+&lt;!&ndash;                    <br>&ndash;&gt;
+&lt;!&ndash;                    <small class="text-muted">ID: {{ project.id }}</small>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;                    <span class="file-number">{{ project.fileNumber || 'Not assigned' }}</span>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;                    <span class="standard-badge">{{ project.standard }}</span>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.assignedAuditor }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;                        <span class="status-badge" [class]="'status-' + project.status.toLowerCase().replace(' ', '-')">&ndash;&gt;
+&lt;!&ndash;                            {{ project.status }}&ndash;&gt;
+&lt;!&ndash;                        </span>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.type }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ formatDate(project.createdDate) }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;                    <span class="value-amount">{{ project.estimatedValue | currency:'USD':'symbol':'1.0-0' }}</span>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;                <td class="action-buttons">&ndash;&gt;
+&lt;!&ndash;                    <button class="btn btn-sm btn-primary"&ndash;&gt;
+&lt;!&ndash;                            [routerLink]="['/projects', project.id]"&ndash;&gt;
+&lt;!&ndash;                            title="View Project Details">&ndash;&gt;
+&lt;!&ndash;                        <i class="fa fa-eye"></i>&ndash;&gt;
+&lt;!&ndash;                    </button>&ndash;&gt;
+&lt;!&ndash;                    <button class="btn btn-sm btn-success"&ndash;&gt;
+&lt;!&ndash;                            (click)="viewAuditStages(project)"&ndash;&gt;
+&lt;!&ndash;                            *ngIf="project.auditStages && project.auditStages.length > 0"&ndash;&gt;
+&lt;!&ndash;                            title="View Audit Stages">&ndash;&gt;
+&lt;!&ndash;                        <i class="fa fa-tasks"></i>&ndash;&gt;
+&lt;!&ndash;                    </button>&ndash;&gt;
+&lt;!&ndash;                    <button class="btn btn-sm btn-warning"&ndash;&gt;
+&lt;!&ndash;                            [routerLink]="['/projects', project.id, 'edit']"&ndash;&gt;
+&lt;!&ndash;                            *ngIf="canEditProject(project)"&ndash;&gt;
+&lt;!&ndash;                            title="Edit Project">&ndash;&gt;
+&lt;!&ndash;                        <i class="fa fa-edit"></i>&ndash;&gt;
+&lt;!&ndash;                    </button>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;            </tr>&ndash;&gt;
+&lt;!&ndash;            </tbody>&ndash;&gt;
+&lt;!&ndash;        </table>&ndash;&gt;
+&lt;!&ndash;    </div>&ndash;&gt;
+
+&lt;!&ndash;    &lt;!&ndash; Audit Stages Summary &ndash;&gt;&ndash;&gt;
+&lt;!&ndash;    <div class="audit-stages-summary" *ngIf="selectedProject">&ndash;&gt;
+&lt;!&ndash;        <div class="modal-overlay" (click)="closeAuditStagesModal()"></div>&ndash;&gt;
+&lt;!&ndash;        <div class="modal-content">&ndash;&gt;
+&lt;!&ndash;            <div class="modal-header">&ndash;&gt;
+&lt;!&ndash;                <h3>Audit Stages - {{ selectedProject.projectName }}</h3>&ndash;&gt;
+&lt;!&ndash;                <button class="btn-close" (click)="closeAuditStagesModal()">&ndash;&gt;
+&lt;!&ndash;                    <i class="fa fa-times"></i>&ndash;&gt;
+&lt;!&ndash;                </button>&ndash;&gt;
+&lt;!&ndash;            </div>&ndash;&gt;
+&lt;!&ndash;            <div class="modal-body">&ndash;&gt;
+&lt;!&ndash;                <div class="audit-stage-card" *ngFor="let stage of selectedProject.auditStages">&ndash;&gt;
+&lt;!&ndash;                    <div class="stage-header">&ndash;&gt;
+&lt;!&ndash;                        <h4>{{ stage.stageType }}</h4>&ndash;&gt;
+&lt;!&ndash;                        <span class="stage-status" [class]="'status-' + stage.status.toLowerCase().replace(' ', '-')">&ndash;&gt;
+&lt;!&ndash;                            {{ stage.status }}&ndash;&gt;
+&lt;!&ndash;                        </span>&ndash;&gt;
+&lt;!&ndash;                    </div>&ndash;&gt;
+&lt;!&ndash;                    <div class="stage-details">&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.teamLeader">&ndash;&gt;
+&lt;!&ndash;                            <strong>Team Leader:</strong> {{ stage.teamLeader }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.auditTeam">&ndash;&gt;
+&lt;!&ndash;                            <strong>Audit Team:</strong> {{ stage.auditTeam }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row">&ndash;&gt;
+&lt;!&ndash;                            <strong>Audit Type:</strong> {{ stage.auditType }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row">&ndash;&gt;
+&lt;!&ndash;                            <strong>Quotation Days:</strong> {{ stage.quotationDays }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.plannedDates">&ndash;&gt;
+&lt;!&ndash;                            <strong>Planned Dates:</strong> {{ stage.plannedDates }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.confirmedDates">&ndash;&gt;
+&lt;!&ndash;                            <strong>Confirmed Dates:</strong> {{ stage.confirmedDates }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.releaseDate">&ndash;&gt;
+&lt;!&ndash;                            <strong>Release Date:</strong> {{ formatDate(stage.releaseDate) }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                    </div>&ndash;&gt;
+&lt;!&ndash;                </div>&ndash;&gt;
+&lt;!&ndash;            </div>&ndash;&gt;
+&lt;!&ndash;        </div>&ndash;&gt;
+&lt;!&ndash;    </div>&ndash;&gt;
+
+&lt;!&ndash;    &lt;!&ndash; Back Button &ndash;&gt;&ndash;&gt;
+&lt;!&ndash;    <div class="navigation-buttons">&ndash;&gt;
+&lt;!&ndash;        <button class="btn btn-secondary" (click)="goBack()">&ndash;&gt;
+&lt;!&ndash;            <i class="fa fa-arrow-left"></i> Back to Companies&ndash;&gt;
+&lt;!&ndash;        </button>&ndash;&gt;
+&lt;!&ndash;        <button class="btn btn-primary" [routerLink]="['/projects/create']" [queryParams]="{ companyId: companyId }">&ndash;&gt;
+&lt;!&ndash;            <i class="fa fa-plus"></i> Add New Project&ndash;&gt;
+&lt;!&ndash;        </button>&ndash;&gt;
+&lt;!&ndash;    </div>&ndash;&gt;
+&lt;!&ndash;</div>&ndash;&gt;
+<div class="project-list-container">
+    <div class="project-header">
+        <h2>Projects for {{ companyName }}</h2>
+        <div class="project-count">Total Projects: {{ projects?.length || 0 }}</div>
+    </div>
+
+    &lt;!&ndash; Loading State &ndash;&gt;
+    <div class="loading-container" *ngIf="loading">
+        <i class="fa fa-spinner fa-spin"></i>
+        <p>Loading projects...</p>
+    </div>
+
+    &lt;!&ndash; Empty State &ndash;&gt;
+    <div class="empty-state" *ngIf="!loading && projects?.length === 0">
+        <i class="fa fa-folder-open-o"></i>
+        <h3>No Projects Found</h3>
+        <p>This company doesn't have any projects yet.</p>
+        <button class="btn btn-primary" [routerLink]="['/sales-pipeline']">
+            <i class="fa fa-plus"></i> Create New Opportunity
+        </button>
+    </div>
+
+    &lt;!&ndash; Projects Table &ndash;&gt;
+    <div class="projects-table" *ngIf="!loading && (projects?.length || 0) > 0"
+    >
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>File Number</th>
+                <th>Standard</th>
+                <th>Assigned Auditor</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Created Date</th>
+                <th>Estimated Value</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let project of projects; trackBy: trackByProjectId"
+                [class]="getProjectStatusClass(project.status)">
+                <td>
+                    <strong>{{ project.projectName }}</strong><br>
+                    <small class="text-muted">ID: {{ project.id }}</small>
+                </td>
+                <td>
+                    <span class="file-number">{{ project.fileNumber || 'Not assigned' }}</span>
+                </td>
+                <td>
+                    <span class="standard-badge">{{ project.standard }}</span>
+                </td>
+                <td>{{ project.assignedAuditor }}</td>
+                <td>
+            <span class="status-badge"
+                  [class]="'status-' + (project.status ? project.status.toLowerCase().replace(' ', '-') : 'unknown')"
+
+            >
+              {{ project.status || 'N/A' }}
+            </span>
+                </td>
+                <td>{{ project.type }}</td>
+                <td>{{ formatDate(project.createdDate) }}</td>
+                <td>
+                    <span class="value-amount">{{ project.estimatedValue | currency:'USD':'symbol':'1.0-0' }}</span>
+                </td>
+                <td class="action-buttons">
+                    <button class="btn btn-sm btn-primary"
+                            [routerLink]="['/projects', project.id]"
+                            title="View Project Details">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-success"
+                            (click)="viewAuditStages(project)"
+                            *ngIf="(project.auditStages?.length || 0) > 0"
+
+                            title="View Audit Stages">
+                        <i class="fa fa-tasks"></i>
+                    </button>
+                    <button class="btn btn-sm btn-warning"
+                            [routerLink]="['/projects', project.id, 'edit']"
+                            *ngIf="canEditProject(project)"
+                            title="Edit Project">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+&lt;!&ndash;    &lt;!&ndash; Audit Opportunities Table &ndash;&gt;&ndash;&gt;
+&lt;!&ndash;    <div class="opportunities-table" *ngIf="projects && projects.length > 0">&ndash;&gt;
+&lt;!&ndash;        <h3 class="section-title">Audit Opportunities Summary</h3>&ndash;&gt;
+&lt;!&ndash;        <table class="table table-bordered table-hover">&ndash;&gt;
+&lt;!&ndash;            <thead>&ndash;&gt;
+&lt;!&ndash;            <tr>&ndash;&gt;
+&lt;!&ndash;                <th>Audit Code</th>&ndash;&gt;
+&lt;!&ndash;                <th>Team Leader</th>&ndash;&gt;
+&lt;!&ndash;                <th>Audit Team</th>&ndash;&gt;
+&lt;!&ndash;                <th>Witness Audit?</th>&ndash;&gt;
+&lt;!&ndash;                <th>Audit Type</th>&ndash;&gt;
+&lt;!&ndash;                <th>Quotation Days</th>&ndash;&gt;
+&lt;!&ndash;                <th>Planned Dates</th>&ndash;&gt;
+&lt;!&ndash;                <th>Confirmed Dates</th>&ndash;&gt;
+&lt;!&ndash;                <th>Status</th>&ndash;&gt;
+&lt;!&ndash;                <th>Certificate Expiry</th>&ndash;&gt;
+&lt;!&ndash;                <th>Payment Details</th>&ndash;&gt;
+&lt;!&ndash;                <th>Actions</th>&ndash;&gt;
+
+&lt;!&ndash;            </tr>&ndash;&gt;
+&lt;!&ndash;            </thead>&ndash;&gt;
+&lt;!&ndash;            <tbody>&ndash;&gt;
+&lt;!&ndash;            <tr *ngFor="let project of projects">&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.opportunity?.auditCode || 'N/A' }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.opportunity?.assignedAuditor || 'Unassigned' }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.opportunity?.salesRep || 'N/A' }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;                    <span *ngIf="!project.opportunity?.assignedAuditor?.includes('Yassine')">N/A</span>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.opportunity?.stage || 'Unknown' }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.opportunity?.auditDays || 0 }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.opportunity?.auditExpectedDate || '-' }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.opportunity?.certificateExpiryDate || '-' }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;            <span class="status-badge"&ndash;&gt;
+&lt;!&ndash;                  [class]="'status-' + (project.status ? project.status.toLowerCase().replace(' ', '-') : 'unknown')"&ndash;&gt;
+&lt;!&ndash;            >&ndash;&gt;
+&lt;!&ndash;              {{ project.opportunity?.status || 'N/A' }}&ndash;&gt;
+&lt;!&ndash;            </span>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;                <td>{{ project.opportunity?.certificateExpiryDate || 'N/A' }}</td>&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;                    <ng-template #noPayment>&ndash;&gt;
+&lt;!&ndash;                        <a class="btn btn-sm btn-link">Add Payment Details</a>&ndash;&gt;
+&lt;!&ndash;                    </ng-template>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;                <td>&ndash;&gt;
+&lt;!&ndash;                    <button (click)="goToAuditPackage(project.id)">Audit Package</button>&ndash;&gt;
+&lt;!&ndash;                    <button (click)="goToAuditNote(project.id)">Audit Note</button>&ndash;&gt;
+&lt;!&ndash;                    <button (click)="goToRequestCertificate(project.id)">Request Certificate</button>&ndash;&gt;
+&lt;!&ndash;                </td>&ndash;&gt;
+&lt;!&ndash;            </tr>&ndash;&gt;
+&lt;!&ndash;            </tbody>&ndash;&gt;
+&lt;!&ndash;        </table>&ndash;&gt;
+&lt;!&ndash;    </div>&ndash;&gt;
+
+&lt;!&ndash;    &lt;!&ndash; Audit Stages Summary &ndash;&gt;&ndash;&gt;
+&lt;!&ndash;    <div class="audit-stages-summary" *ngIf="selectedProject">&ndash;&gt;
+&lt;!&ndash;        <div class="modal-overlay" (click)="closeAuditStagesModal()"></div>&ndash;&gt;
+&lt;!&ndash;        <div class="modal-content">&ndash;&gt;
+&lt;!&ndash;            <div class="modal-header">&ndash;&gt;
+&lt;!&ndash;                <h3>Audit Stages - {{ selectedProject.projectName }}</h3>&ndash;&gt;
+&lt;!&ndash;                <button class="btn-close" (click)="closeAuditStagesModal()">&ndash;&gt;
+&lt;!&ndash;                    <i class="fa fa-times"></i>&ndash;&gt;
+&lt;!&ndash;                </button>&ndash;&gt;
+&lt;!&ndash;            </div>&ndash;&gt;
+&lt;!&ndash;            <div class="modal-body">&ndash;&gt;
+&lt;!&ndash;                <div class="audit-stage-card" *ngFor="let stage of selectedProject.auditStages">&ndash;&gt;
+&lt;!&ndash;                    <div class="stage-header">&ndash;&gt;
+&lt;!&ndash;                        <h4>{{ stage.stageType }}</h4>&ndash;&gt;
+&lt;!&ndash;                        <span class="stage-status" [class]="'status-' + stage.status.toLowerCase().replace(' ', '-')">&ndash;&gt;
+&lt;!&ndash;              {{ stage.status }}&ndash;&gt;
+&lt;!&ndash;            </span>&ndash;&gt;
+&lt;!&ndash;                    </div>&ndash;&gt;
+&lt;!&ndash;                    <div class="stage-details">&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.teamLeader">&ndash;&gt;
+&lt;!&ndash;                            <strong>Team Leader:</strong> {{ stage.teamLeader }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.auditTeam">&ndash;&gt;
+&lt;!&ndash;                            <strong>Audit Team:</strong> {{ stage.auditTeam }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row">&ndash;&gt;
+&lt;!&ndash;                            <strong>Audit Type:</strong> {{ stage.auditType }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row">&ndash;&gt;
+&lt;!&ndash;                            <strong>Quotation Days:</strong> {{ stage.quotationDays }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.plannedDates">&ndash;&gt;
+&lt;!&ndash;                            <strong>Planned Dates:</strong> {{ stage.plannedDates }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.confirmedDates">&ndash;&gt;
+&lt;!&ndash;                            <strong>Confirmed Dates:</strong> {{ stage.confirmedDates }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+&lt;!&ndash;                        <div class="detail-row" *ngIf="stage.releaseDate">&ndash;&gt;
+&lt;!&ndash;                            <strong>Release Date:</strong> {{ formatDate(stage.releaseDate) }}&ndash;&gt;
+&lt;!&ndash;                        </div>&ndash;&gt;
+
+&lt;!&ndash;                    </div>&ndash;&gt;
+&lt;!&ndash;                </div>&ndash;&gt;
+&lt;!&ndash;            </div>&ndash;&gt;
+&lt;!&ndash;        </div>&ndash;&gt;
+&lt;!&ndash;    </div>&ndash;&gt;
+    &lt;!&ndash; Opportunity Status Table &ndash;&gt;
+    &lt;!&ndash; Opportunity Status Table &ndash;&gt;
+    <div class="opportunity-status-table" *ngIf="projects && projects.length > 0">
+        <h3 class="section-title">Opportunity Status (Done)</h3>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>S1</th>
+                <th>S2</th>
+                <th>Stage 1</th>
+                <th>Stage 2</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let project of projects">
+                <td>{{ getStageStatus(project, 'Surveillance 1') }}</td>
+                <td>{{ getStageStatus(project, 'Surveillance 2') }}</td>
+                <td>{{ getStageStatus(project, 'Stage 1') }}</td>
+                <td>{{ getStageStatus(project, 'Stage 2') }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container mt-4">
+        <h2 class="mb-3">Liste des Opportunités</h2>
+
+        <div *ngIf="loading" class="alert alert-info">Chargement en cours...</div>
+
+        <table class="table table-bordered table-striped" *ngIf="!loading && opportunities.length > 0">
+            <thead class="table-dark">
+            <tr>
+                <th>S1</th>
+                <th>S2</th>
+                <th>Stage 1</th>
+                <th>Stage 2</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let opp of opportunities">
+                <td>{{ opp.s1 }}</td>
+                <td>{{ opp.s2 }}</td>
+                <td>{{ opp.stage1 }}</td>
+                <td>{{ opp.stage2 }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="!loading && opportunities.length === 0" class="alert alert-warning">
+            Aucune opportunité trouvée.
+        </div>
+    </div>
+    <div class="container mt-4">
+        <h2>Liste des Projets - Opportunités Done</h2>
+
+        <div *ngFor="let project of getProjectsWithOpportunityDone()" class="mb-5">
+            <h4>{{ project.opportunityName }}</h4>
+
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                <tr>
+                    <th>Audit Code</th>
+                    <th>Team Leader</th>
+                    <th>Audit Team</th>
+                    <th>Witness Audit?</th>
+                    <th>Audit Type</th>
+                    <th>Quotation Days</th>
+                    <th>Dates</th>
+                    <th>Planned Dates</th>
+                    <th>Assigned Days</th>
+                    <th>Tentative Dates</th>
+                    <th>Confirmed Dates</th>
+                    <th>Status</th>
+                    <th>Certificate Details</th>
+                    <th>Payment Details</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let stage of project.auditStages">
+                    <td>{{ stage.stageType }}</td>
+                    <td>{{ stage.teamLeader }}</td>
+                    <td>{{ stage.auditTeam }}</td>
+                    <td>{{ stage.witnessAudit }}</td>
+                    <td>{{ stage.auditType }}</td>
+                    <td>{{ stage.quotationDays }}</td>
+
+                    <td>{{ stage.plannedDates }}</td>
+                    <td>{{ stage.assignedDays }}</td>
+                    <td>{{ stage.tentativeDates }}</td>
+                    <td>{{ stage.confirmedDates }}</td>
+                    <td>{{ stage.status }}</td>
+
+                    <td>
+                        <button class="btn btn-primary btn-sm">Action</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    &lt;!&ndash; Back Button &ndash;&gt;
+    <div class="navigation-buttons">
+        <button class="btn btn-secondary" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Back to Companies
+        </button>
+        <button class="btn btn-primary"
+                [routerLink]="['/projects/create']"
+                [queryParams]="{ companyId: companyId }">
+            <i class="fa fa-plus"></i> Add New Project
+        </button>
+    </div>
+</div>
+&ndash;&gt;
+&lt;!&ndash;
+&lt;!&ndash; project-list.component.html - FIXED VERSION &ndash;&gt;
+&lt;!&ndash; project-list.component.html - FIXED VERSION &ndash;&gt;
+<div class="project-list-container">
+    <div class="project-header">
+        <h2>Projects for {{ companyName }}</h2>
+        <div class="project-count">
+            Total Projects: {{ projects?.length || 0 }} |
+            Projects with Done Status: {{ projectsWithDoneStatus?.length || 0 }}
+        </div>
+        <button class="btn btn-secondary btn-sm" (click)="refreshData()">
+            <i class="fa fa-refresh"></i> Refresh Data
+        </button>
+    </div>
+
+    &lt;!&ndash; Loading State &ndash;&gt;
+    <div class="loading-container" *ngIf="loading">
+        <i class="fa fa-spinner fa-spin"></i>
+        <p>Loading projects and opportunities...</p>
+    </div>
+
+    &lt;!&ndash; Debug Information (Remove in production) &ndash;&gt;
+    <div class="alert alert-info" *ngIf="!loading">
+        <small>
+            Debug: Projects loaded: {{ projects?.length || 0 }},
+            Opportunities loaded: {{ opportunities?.length || 0 }},
+            Projects with Done status: {{ projectsWithDoneStatus?.length || 0 }}
+        </small>
+    </div>
+
+    &lt;!&ndash; Empty State &ndash;&gt;
+    <div class="empty-state" *ngIf="!loading && (!projects || projects.length === 0)">
+        <i class="fa fa-folder-open-o"></i>
+        <h3>No Projects Found</h3>
+        <p>This company doesn't have any projects yet.</p>
+        <button class="btn btn-primary" [routerLink]="['/sales-pipeline']">
+            <i class="fa fa-plus"></i> Create New Opportunity
+        </button>
+    </div>
+
+    &lt;!&ndash; Main Projects Table &ndash;&gt;
+    <div class="projects-table" *ngIf="!loading && projects && projects.length > 0">
+        <h3>All Projects</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>File Number</th>
+                <th>Standard</th>
+                <th>Assigned Auditor</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Created Date</th>
+                <th>Estimated Value</th>
+                <th>Opportunity Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let project of projects; trackBy: trackByProjectId"
+                [class]="getProjectStatusClass(project.status)">
+                <td>
+                    <strong>{{ project.projectName || 'N/A' }}</strong><br>
+                    <small class="text-muted">ID: {{ project.id }}</small>
+                </td>
+                <td>
+                    <span class="file-number">{{ project.fileNumber || 'Not assigned' }}</span>
+                </td>
+                <td>
+                    <span class="standard-badge">{{ project.standard || 'N/A' }}</span>
+                </td>
+                <td>{{ project.assignedAuditor || 'Unassigned' }}</td>
+                <td>
+                    <span class="status-badge"
+                          [class]="'status-' + (project.status ? project.status.toLowerCase().replace(' ', '-') : 'unknown')">
+                        {{ project.status || 'N/A' }}
+                    </span>
+                </td>
+                <td>{{ project.type || 'N/A' }}</td>
+                <td>{{ formatDate(project.createdDate) }}</td>
+                <td>
+                    <span class="value-amount">{{ (project.estimatedValue || 0) | currency:'USD':'symbol':'1.0-0' }}</span>
+                </td>
+                <td>
+                    <span class="status-badge"
+                          [class]="'status-' + (project.opportunity && project.opportunity.status ? project.opportunity.status.toLowerCase().replace(' ', '-') : 'unknown')">
+                        {{ project.opportunity?.status || 'N/A' }}
+                    </span>
+                </td>
+                <td class="action-buttons">
+                    <button class="btn btn-sm btn-primary"
+                            [routerLink]="['/projects', project.id]"
+                            title="View Project Details">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-success"
+                            (click)="viewAuditStages(project)"
+                            *ngIf="hasAuditStages(project)"
+                            title="View Audit Stages">
+                        <i class="fa fa-tasks"></i>
+                    </button>
+                    <button class="btn btn-sm btn-warning"
+                            [routerLink]="['/projects', project.id, 'edit']"
+                            *ngIf="canEditProject(project)"
+                            title="Edit Project">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    &lt;!&ndash; All Opportunities Table &ndash;&gt;
+    <div class="container mt-4" *ngIf="!loading && opportunities && opportunities.length > 0">
+        <h3 class="section-title">All Opportunities</h3>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>S1</th>
+                <th>S2</th>
+                <th>Stage 1</th>
+                <th>Stage 2</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let opp of opportunities; trackBy: trackByOpportunityId">
+                <td>{{ opp.id }}</td>
+                <td>{{ opp.s1 || 'N/A' }}</td>
+                <td>{{ opp.s2 || 'N/A' }}</td>
+                <td>{{ opp.stage1 || 'N/A' }}</td>
+                <td>{{ opp.stage2 || 'N/A' }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    &lt;!&ndash; Projects with Done Opportunity Status &ndash;&gt;
+    <div class="container mt-4" *ngIf="!loading">
+        <h3 class="section-title">Projects with Opportunity Status 'Done'</h3>
+
+        &lt;!&ndash; Empty state for Done projects &ndash;&gt;
+        <div class="alert alert-info" *ngIf="(!projectsWithDoneStatus || projectsWithDoneStatus.length === 0)">
+            <i class="fa fa-info-circle"></i>
+            No projects found with opportunity status 'Done'.
+            <br><small>Make sure opportunities are properly linked to projects and have status 'Done'.</small>
+        </div>
+
+        &lt;!&ndash; Table for Done projects &ndash;&gt;
+        <div *ngFor="let project of getProjectsWithOpportunityDone(); trackBy: trackByProjectId" class="mb-5">
+            <h4>{{ project.opportunityName || project.projectName || 'Unnamed Project' }}</h4>
+
+            &lt;!&ndash; Project Info Card &ndash;&gt;
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Project:</strong> {{ project.projectName }}<br>
+                            <strong>Standard:</strong> {{ project.standard }}<br>
+                            <strong>Auditor:</strong> {{ project.assignedAuditor }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Status:</strong> {{ project.status }}<br>
+                            <strong>Opportunity Status:</strong> {{ project.opportunity?.status }}<br>
+                            <strong>Audit Code:</strong> {{ project.opportunity?.auditCode || 'N/A' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            &lt;!&ndash; Audit Stages Table for this project &ndash;&gt;
+            <table class="table table-bordered table-striped" *ngIf="hasAuditStages(project)">
+                <thead class="table-dark">
+                <tr>
+                    <th>Stage Type</th>
+                    <th>Team Leader</th>
+                    <th>Audit Team</th>
+                    <th>Witness Audit</th>
+                    <th>Audit Type</th>
+                    <th>Quotation Days</th>
+                    <th>Planned Dates</th>
+                    <th>Assigned Days</th>
+                    <th>Tentative Dates</th>
+                    <th>Confirmed Dates</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let stage of project.auditStages; trackBy: trackByStageId">
+                    <td><strong>{{ stage.stageType || 'N/A' }}</strong></td>
+                    <td>{{ stage.teamLeader || 'Unassigned' }}</td>
+                    <td>{{ stage.auditTeam || 'Unassigned' }}</td>
+                    <td>{{ stage.witnessAudit ? 'Yes' : 'No' }}</td>
+                    <td>{{ stage.auditType || 'N/A' }}</td>
+                    <td>{{ stage.quotationDays || 0 }}</td>
+                    <td>{{ stage.plannedDates || 'Not set' }}</td>
+                    <td>{{ stage.assignedDays || 0 }}</td>
+                    <td>{{ stage.tentativeDates || 'Not set' }}</td>
+                    <td>{{ stage.confirmedDates || 'Not set' }}</td>
+                    <td>
+                        <span class="status-badge"
+                              [class]="'status-' + (stage.status ? stage.status.toLowerCase().replace(' ', '-') : 'unknown')">
+                            {{ stage.status || 'N/A' }}
+                        </span>
+                    </td>
+                    <td class="action-buttons">
+                        <div class="btn-group-vertical btn-group-sm">
+                            <button class="btn btn-info btn-xs mb-1"
+                                    (click)="goToAuditPackage(project.id)"
+                                    title="Audit Package">
+                                <i class="fa fa-package"></i> Package
+                            </button>
+                            <button class="btn btn-warning btn-xs mb-1"
+                                    (click)="goToAuditNote(project.id)"
+                                    title="Audit Note">
+                                <i class="fa fa-note"></i> Note
+                            </button>
+                            <button class="btn btn-success btn-xs"
+                                    (click)="goToRequestCertificate(project.id)"
+                                    title="Request Certificate">
+                                <i class="fa fa-certificate"></i> Certificate
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            &lt;!&ndash; No audit stages message &ndash;&gt;
+            <div class="alert alert-warning" *ngIf="!hasAuditStages(project)">
+                <i class="fa fa-exclamation-triangle"></i>
+                No audit stages defined for this project.
+            </div>
+        </div>
+    </div>
+
+    &lt;!&ndash; Opportunity Status Summary Table (Alternative View) &ndash;&gt;
+    <div class="opportunity-status-table mt-4" *ngIf="!loading && projects && projects.length > 0">
+        <h3 class="section-title">Project Stage Status Summary</h3>
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>Project Name</th>
+                <th>Surveillance 1</th>
+                <th>Surveillance 2</th>
+                <th>Stage 1</th>
+                <th>Stage 2</th>
+                <th>Opportunity Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let project of projects; trackBy: trackByProjectId">
+                <td><strong>{{ project.projectName }}</strong></td>
+                <td>
+                    <span class="status-badge"
+                          [class]="'status-' + getStageStatus(project, 'Surveillance 1').toLowerCase().replace(' ', '-')">
+                        {{ getStageStatus(project, 'Surveillance 1') }}
+                    </span>
+                </td>
+                <td>
+                    <span class="status-badge"
+                          [class]="'status-' + getStageStatus(project, 'Surveillance 2').toLowerCase().replace(' ', '-')">
+                        {{ getStageStatus(project, 'Surveillance 2') }}
+                    </span>
+                </td>
+                <td>
+                    <span class="status-badge"
+                          [class]="'status-' + getStageStatus(project, 'Stage 1').toLowerCase().replace(' ', '-')">
+                        {{ getStageStatus(project, 'Stage 1') }}
+                    </span>
+                </td>
+                <td>
+                    <span class="status-badge"
+                          [class]="'status-' + getStageStatus(project, 'Stage 2').toLowerCase().replace(' ', '-')">
+                        {{ getStageStatus(project, 'Stage 2') }}
+                    </span>
+                </td>
+                <td>
+                    <span class="status-badge"
+                          [class]="'status-' + (project.opportunity && project.opportunity.status ? project.opportunity.status.toLowerCase().replace(' ', '-') : 'unknown')">
+                        {{ project.opportunity?.status || 'N/A' }}
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    &lt;!&ndash; Audit Stages Modal &ndash;&gt;
+    <div class="audit-stages-summary" *ngIf="selectedProject">
+        <div class="modal-overlay" (click)="closeAuditStagesModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Audit Stages - {{ selectedProject.projectName }}</h3>
+                <button class="btn-close" (click)="closeAuditStagesModal()">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="audit-stage-card" *ngFor="let stage of selectedProject.auditStages">
+                    <div class="stage-header">
+                        <h4>{{ stage.stageType }}</h4>
+                        <span class="stage-status" [class]="'status-' + (stage.status ? stage.status.toLowerCase().replace(' ', '-') : 'unknown')">
+                            {{ stage.status }}
+                        </span>
+                    </div>
+                    <div class="stage-details">
+                        <div class="detail-row" *ngIf="stage.teamLeader">
+                            <strong>Team Leader:</strong> {{ stage.teamLeader }}
+                        </div>
+                        <div class="detail-row" *ngIf="stage.auditTeam">
+                            <strong>Audit Team:</strong> {{ stage.auditTeam }}
+                        </div>
+                        <div class="detail-row">
+                            <strong>Audit Type:</strong> {{ stage.auditType }}
+                        </div>
+                        <div class="detail-row">
+                            <strong>Quotation Days:</strong> {{ stage.quotationDays }}
+                        </div>
+                        <div class="detail-row" *ngIf="stage.plannedDates">
+                            <strong>Planned Dates:</strong> {{ stage.plannedDates }}
+                        </div>
+                        <div class="detail-row" *ngIf="stage.confirmedDates">
+                            <strong>Confirmed Dates:</strong> {{ stage.confirmedDates }}
+                        </div>
+                        <div class="detail-row" *ngIf="stage.releaseDate">
+                            <strong>Release Date:</strong> {{ formatDate(stage.releaseDate) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    &lt;!&ndash; Navigation Buttons &ndash;&gt;
+    <div class="navigation-buttons mt-4">
+        <button class="btn btn-secondary" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Back to Companies
+        </button>
+        <button class="btn btn-primary"
+                [routerLink]="['/projects/create']"
+                [queryParams]="{ companyId: companyId }">
+            <i class="fa fa-plus"></i> Add New Project
+        </button>
+        <button class="btn btn-info"
+                (click)="exportProjects()"
+                *ngIf="userRole === 'admin'">
+            <i class="fa fa-download"></i> Export CSV
+        </button>
+    </div>
+    </div>
+&ndash;&gt;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project List Template</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* This CSS would typically be in project-list.component.css */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card.projects .icon { color: #3498db; }
+        .stat-card.completed .icon { color: #27ae60; }
+        .stat-card.in-progress .icon { color: #f39c12; }
+        .stat-card.pending .icon { color: #e74c3c; }
+
+        .section-title {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .project-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .project-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .info-item strong {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin: 15px 0 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #27ae60;
+            transition: width 0.5s ease;
+        }
+
+        .audit-stages {
+            padding: 20px;
+        }
+
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stage-card {
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stage-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .stage-card.status-completed {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #d4edda 0%, #f8fff9 100%);
+        }
+
+        .stage-card.status-completed::before { background: #27ae60; }
+
+        .stage-card.status-in-progress {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #fff3cd 0%, #fffef7 100%);
+        }
+
+        .stage-card.status-in-progress::before { background: #f39c12; }
+
+        .stage-card.status-assigned {
+            border-color: #3498db;
+            background: linear-gradient(135deg, #d1ecf1 0%, #f8fcff 100%);
+        }
+
+        .stage-card.status-assigned::before { background: #3498db; }
+
+        .stage-card.status-un-assigned {
+            border-color: #95a5a6;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .stage-card.status-un-assigned::before { background: #95a5a6; }
+
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .stage-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .stage-status {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stage-status.status-completed {
+            background: #27ae60;
+            color: white;
+        }
+
+        .stage-status.status-in-progress {
+            background: #f39c12;
+            color: white;
+        }
+
+        .stage-status.status-assigned {
+            background: #3498db;
+            color: white;
+        }
+
+        .stage-status.status-un-assigned {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .stage-details {
+            display: grid;
+            gap: 5px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .detail-value {
+            color: #7f8c8d;
+        }
+
+        .actions-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-info {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .table th {
+            background: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+
+        .table-striped tbody tr:nth-child(odd) {
+            background: #f8f9fa;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1001;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .stages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-info {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+&lt;!&ndash; This is the Angular template structure &ndash;&gt;
+<div class="container">
+    &lt;!&ndash; Header &ndash;&gt;
+    <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2><i class="fas fa-building"></i> {{companyName}}</h2>
+                <p>Projects with Completed Opportunities</p>
+            </div>
+            <div>
+                <button class="btn btn-info" (click)="goBack()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button class="btn btn-success" (click)="refreshData()" style="margin-left: 10px;">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    &lt;!&ndash; Loading State &ndash;&gt;
+    <div *ngIf="loading" class="loading">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+        <p>Loading projects...</p>
+    </div>
+
+    &lt;!&ndash; Statistics Cards &ndash;&gt;
+    <div class="stats-cards" *ngIf="!loading">
+        <div class="stat-card projects">
+            <div class="icon"><i class="fas fa-project-diagram"></i></div>
+            <h3>{{stats.totalProjects}}</h3>
+            <p>Total Projects</p>
+        </div>
+        <div class="stat-card completed">
+            <div class="icon"><i class="fas fa-check-circle"></i></div>
+            <h3>{{stats.completedStages}}</h3>
+            <p>Completed Stages</p>
+        </div>
+        <div class="stat-card in-progress">
+            <div class="icon"><i class="fas fa-clock"></i></div>
+            <h3>{{stats.inProgressStages}}</h3>
+            <p>In Progress</p>
+        </div>
+        <div class="stat-card pending">
+            <div class="icon"><i class="fas fa-exclamation-circle"></i></div>
+            <h3>{{stats.pendingStages}}</h3>
+            <p>Pending</p>
+        </div>
+    </div>
+
+    &lt;!&ndash; Main Content &ndash;&gt;
+    <div *ngIf="!loading">
+        <div class="section-title">
+            <i class="fas fa-tasks"></i> Projects with "Done" Opportunity Status
+        </div>
+
+        &lt;!&ndash; Empty State &ndash;&gt;
+        <div class="alert alert-info" *ngIf="(!projectsWithDoneStatus || projectsWithDoneStatus.length === 0)">
+            <i class="fa fa-info-circle"></i>
+            No projects found with opportunity status 'Done'.
+            <br><small>Make sure opportunities are properly linked to projects and have status 'Done'.</small>
+        </div>
+
+        &lt;!&ndash; Projects Display &ndash;&gt;
+        <div *ngFor="let project of getProjectsWithOpportunityDone(); trackBy: trackByProjectId" class="project-card">
+            &lt;!&ndash; Project Header &ndash;&gt;
+            <div class="project-header">
+                <h3>{{project.opportunity?.opportunityName || project.projectName || 'Unnamed Project'}}</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
+                </div>
+                <small>Progress: {{getProjectProgress(project)}}% Complete</small>
+
+                <div class="project-info">
+                    <div class="info-item">
+                        <strong>Project Name</strong>
+                        {{project.projectName}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Standard</strong>
+                        {{project.opportunity?.standard || 'N/A'}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Assigned Auditor</strong>
+                        {{project.opportunity?.assignedAuditor || 'Unassigned'}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Status</strong>
+                        {{project.status}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Opportunity Status</strong>
+                        {{project.opportunity?.status || 'N/A'}}
+                    </div>
+                    <div class="info-item">
+                        <strong>Audit Code</strong>
+                        {{project.opportunity?.auditCode || 'N/A'}}
+                    </div>
+                </div>
+            </div>
+
+            &lt;!&ndash; Audit Stages &ndash;&gt;
+            <div class="audit-stages">
+                <h4>Audit Stages</h4>
+
+                &lt;!&ndash; No stages message &ndash;&gt;
+                <div class="alert alert-warning" *ngIf="!hasAuditStages(project)">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    No audit stages defined for this project.
+                </div>
+
+                &lt;!&ndash; Stages Grid &ndash;&gt;
+                <div class="stages-grid" *ngIf="hasAuditStages(project)">
+                    <div *ngFor="let stage of getOrderedStages(project); trackBy: trackByStageId"
+                         class="stage-card"
+                         [class]="getStatusBadgeClass(stage.status)">
+
+                        <div class="stage-header">
+                            <div class="stage-title">{{stage.stageType}}</div>
+                            <div class="stage-status" [class]="getStatusBadgeClass(stage.status)">
+                                {{stage.status}}
+                            </div>
+                        </div>
+
+                        <div class="stage-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Team Leader:</span>
+                                <span class="detail-value">{{stage.teamLeader || 'Unassigned'}}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Audit Team:</span>
+                                <span class="detail-value">{{stage.auditTeam || 'Unassigned'}}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Audit Type:</span>
+                                <span class="detail-value">{{stage.auditType}}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Days:</span>
+                                <span class="detail-value">{{stage.quotationDays}} ({{stage.assignedDays}} assigned)</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Planned Dates:</span>
+                                <span class="detail-value">{{formatDate(stage.plannedDates)}}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Confirmed Dates:</span>
+                                <span class="detail-value">{{formatDate(stage.confirmedDates)}}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Witness Audit:</span>
+                                <span class="detail-value">{{stage.witnessAudit ? 'Yes' : 'No'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            &lt;!&ndash; Actions Section &ndash;&gt;
+            <div class="actions-section">
+                <div style="margin-bottom: 15px;">
+                    <strong>Available Actions</strong>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-info"
+                            (click)="goToAuditPackage(project.id)"
+                            title="Audit Package">
+                        <i class="fas fa-box"></i> Audit Package
+                    </button>
+                    <button class="btn btn-warning"
+                            (click)="goToAuditNote(project.id)"
+                            title="Audit Note">
+                        <i class="fas fa-sticky-note"></i> Audit Note
+                    </button>
+                    <button class="btn btn-success"
+                            (click)="goToRequestCertificate(project.id)"
+                            title="Request Certificate">
+                        <i class="fas fa-certificate"></i> Certificate Request
+                    </button>
+                </div>
+
+                &lt;!&ndash; Document Status Warning &ndash;&gt;
+                <div class="alert alert-warning"
+                     *ngIf="!hasRequiredDocuments(project)"
+                     style="margin-top: 15px;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Missing Required Documents:</strong>
+                    <ul style="margin: 5px 0 0 20px;">
+                        <li *ngFor="let doc of getMissingDocuments(project)">{{doc}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        &lt;!&ndash; Project Stage Status Summary Table &ndash;&gt;
+       &lt;!&ndash; <div class="section-title" style="margin-top: 30px;">
+            <i class="fas fa-table"></i> Project Stage Status Summary
+        </div>
+
+        <table class="table table-striped" *ngIf="projectsWithDoneStatus && projectsWithDoneStatus.length > 0">
+            <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>Stage 1</th>
+                <th>Stage 2</th>
+                <th>Surveillance 1</th>
+                <th>Surveillance 2</th>
+                <th>Opportunity Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let project of projectsWithDoneStatus; trackBy: trackByProjectId">
+                <td>
+                    <strong>{{project.projectName}}</strong>
+                    <br>
+                    <small>{{project.opportunity?.opportunityName}}</small>
+                </td>
+                <td>
+                        <span class="stage-status" [class]="getStatusBadgeClass(getStageStatus(project, 'Stage 1'))">
+                            {{getStageStatus(project, 'Stage 1')}}
+                        </span>
+                </td>
+                <td>
+                        <span class="stage-status" [class]="getStatusBadgeClass(getStageStatus(project, 'Stage 2'))">
+                            {{getStageStatus(project, 'Stage 2')}}
+                        </span>
+                </td>
+                <td>
+                        <span class="stage-status" [class]="getStatusBadgeClass(getStageStatus(project, 'Surveillance 1'))">
+                            {{getStageStatus(project, 'Surveillance 1')}}
+                        </span>
+                </td>
+                <td>
+                        <span class="stage-status" [class]="getStatusBadgeClass(getStageStatus(project, 'Surveillance 2'))">
+                            {{getStageStatus(project, 'Surveillance 2')}}
+                        </span>
+                </td>
+                <td>
+                        <span class="stage-status" [class]="getStatusBadgeClass(project.opportunity?.status || 'unknown')">
+                            {{project.opportunity?.status || 'N/A'}}
+                        </span>
+                </td>
+                <td>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-info btn-sm"
+                                (click)="viewAuditStages(project)"
+                                title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-success btn-sm"
+                                (click)="viewProjectDetails(project.id)"
+                                title="Edit Project">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>&ndash;&gt;
+    </div>
+
+    &lt;!&ndash; Admin Export Button &ndash;&gt;
+    <div *ngIf="userRole === 'admin' && !loading" style="text-align: center; margin-top: 30px;">
+        <button class="btn btn-success" (click)="exportProjects()">
+            <i class="fas fa-download"></i> Export Projects to CSV
+        </button>
+    </div>
+</div>
+
+&lt;!&ndash; Audit Stages Modal &ndash;&gt;
+<div *ngIf="selectedProject">
+    <div class="modal-overlay" (click)="closeAuditStagesModal()"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Audit Stages - {{selectedProject.projectName}}</h3>
+            <button class="btn-close" (click)="closeAuditStagesModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            &lt;!&ndash; Project Overview &ndash;&gt;
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <div class="project-info">
+                    <div class="info-item" style="background: white;">
+                        <strong>Opportunity</strong>
+                        {{selectedProject.opportunity?.opportunityName}}
+                    </div>
+                    <div class="info-item" style="background: white;">
+                        <strong>Standard</strong>
+                        {{selectedProject.opportunity?.standard}}
+                    </div>
+                    <div class="info-item" style="background: white;">
+                        <strong>Auditor</strong>
+                        {{selectedProject.opportunity?.assignedAuditor}}
+                    </div>
+                    <div class="info-item" style="background: white;">
+                        <strong>Audit Code</strong>
+                        {{selectedProject.opportunity?.auditCode}}
+                    </div>
+                </div>
+            </div>
+
+            &lt;!&ndash; Stages Details &ndash;&gt;
+            <div *ngFor="let stage of getOrderedStages(selectedProject); trackBy: trackByStageId"
+                 class="stage-card"
+                 [class]="getStatusBadgeClass(stage.status)"
+                 style="margin-bottom: 15px;">
+
+                <div class="stage-header">
+                    <div class="stage-title">{{stage.stageType}}</div>
+                    <div class="stage-status" [class]="getStatusBadgeClass(stage.status)">
+                        {{stage.status}}
+                    </div>
+                </div>
+
+                <div class="stage-details">
+                    <div class="detail-row" *ngIf="stage.teamLeader">
+                        <span class="detail-label">Team Leader:</span>
+                        <span class="detail-value">{{stage.teamLeader}}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="stage.auditTeam">
+                        <span class="detail-label">Audit Team:</span>
+                        <span class="detail-value">{{stage.auditTeam}}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Audit Type:</span>
+                        <span class="detail-value">{{stage.auditType}}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Quotation Days:</span>
+                        <span class="detail-value">{{stage.quotationDays}}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Assigned Days:</span>
+                        <span class="detail-value">{{stage.assignedDays}}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="stage.plannedDates">
+                        <span class="detail-label">Planned Dates:</span>
+                        <span class="detail-value">{{formatDate(stage.plannedDates)}}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="stage.tentativeDates">
+                        <span class="detail-label">Tentative Dates:</span>
+                        <span class="detail-value">{{formatDate(stage.tentativeDates)}}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="stage.confirmedDates">
+                        <span class="detail-label">Confirmed Dates:</span>
+                        <span class="detail-value">{{formatDate(stage.confirmedDates)}}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="stage.auditPlanSentDate">
+                        <span class="detail-label">Audit Plan Sent:</span>
+                        <span class="detail-value">{{formatDate(stage.auditPlanSentDate)}}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="stage.auditReportSentDate">
+                        <span class="detail-label">Report Sent:</span>
+                        <span class="detail-value">{{formatDate(stage.auditReportSentDate)}}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="stage.releaseDate">
+                        <span class="detail-label">Release Date:</span>
+                        <span class="detail-value">{{formatDate(stage.releaseDate)}}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Witness Audit:</span>
+                        <span class="detail-value">{{stage.witnessAudit ? 'Yes' : 'No'}}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="stage.paymentNotes">
+                        <span class="detail-label">Payment Notes:</span>
+                        <span class="detail-value">{{stage.paymentNotes}}</span>
+                    </div>
+                </div>
+            </div>
+
+            &lt;!&ndash; Modal Actions &ndash;&gt;
+            <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
+                <div class="action-buttons">
+                    <button class="btn btn-info" (click)="goToAuditPackage(selectedProject.id)">
+                        <i class="fas fa-box"></i> Audit Package
+                    </button>
+                    <button class="btn btn-warning" (click)="goToAuditNote(selectedProject.id)">
+                        <i class="fas fa-sticky-note"></i> Audit Note
+                    </button>
+                    <button class="btn btn-success" (click)="goToRequestCertificate(selectedProject.id)">
+                        <i class="fas fa-certificate"></i> Certificate Request
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngFor="let project of projectsWithDoneStatus; trackBy: trackByProjectId" class="project-card">
+        <div class="project-header">
+            <h3>{{ project.opportunity?.opportunityName || project.projectName }}</h3>
+            <small>Status:
+                <span [ngClass]="getStatusBadgeClass(project.opportunity?.status || 'unknown')">
+        {{ project.opportunity?.status }}
+      </span>
+            </small>
+        </div>
+
+        <div class="audit-stages">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Audit Code</th>
+                    <th>Team Leader</th>
+                    <th>Audit Team</th>
+                    <th>Witness Audit?</th>
+                    <th>Audit Type</th>
+                    <th>Days</th>
+                    <th>Planned Dates</th>
+                    <th>Confirmed Dates</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let stage of getOrderedStages(project)"
+                    [ngClass]="getStatusBadgeClass(stage.status)">
+                    <td>{{ stage.auditCode || project.opportunity?.auditCode || 'N/A' }}</td>
+                    <td>{{ stage.teamLeader || 'N/A' }}</td>
+                    <td>{{ stage.auditTeam || 'N/A' }}</td>
+                    <td>{{ stage.witnessAudit ? 'Yes' : 'No' }}</td>
+                    <td>{{ stage.auditType }}</td>
+                    <td>{{ stage.quotationDays }} ({{ stage.assignedDays }} assigned)</td>
+                    <td>{{ formatDate(stage.plannedDates) }}</td>
+                    <td>{{ formatDate(stage.confirmedDates) }}</td>
+                    <td>{{ stage.status }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>-->
+<!-- project-list.component.html -->
+<!--
+<div class="project-list-container">
+    &lt;!&ndash; Header Section &ndash;&gt;
+    <div class="header-section">
+        <div class="company-info">
+            <h2>{{ companyName }}</h2>
+            <p class="company-id">Company ID: {{ companyId }}</p>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn btn-secondary" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button *ngIf="selectedProject && canEditProject(selectedProject)" (click)="createNewProject()">Create Project</button>
+
+            <button type="button" class="btn btn-success" (click)="refreshData()">
+                <i class="fas fa-refresh"></i> Refresh
+            </button>
+            <button type="button" class="btn btn-info" (click)="exportProjects()" *ngIf="userRole === 'admin'">
+                <i class="fas fa-download"></i> Export CSV
+            </button>
+        </div>
+    </div>
+
+    &lt;!&ndash; Statistics Cards &ndash;&gt;
+    <div class="stats-cards" *ngIf="!loading">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.totalProjects || 0 }}</div>
+            <div class="stat-label">Total Projects</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.completedStages || 0 }}</div>
+            <div class="stat-label">Completed Stages</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.inProgressStages || 0 }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.pendingStages || 0 }}</div>
+            <div class="stat-label">Pending Stages</div>
+        </div>
+    </div>
+
+    &lt;!&ndash; Loading State &ndash;&gt;
+    <div class="loading-container" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Loading projects with Done status...</p>
+    </div>
+
+    &lt;!&ndash; Projects with Done Status Section &ndash;&gt;
+    <div class="projects-section" *ngIf="!loading && projectsWithDoneStatus && projectsWithDoneStatus.length > 0">
+
+    <h3 class="section-title">Projects from Opportunities with Status "Done"</h3>
+
+        &lt;!&ndash; Project Cards &ndash;&gt;
+        <div class="project-cards-container">
+            <div class="project-card"
+                 *ngFor="let project of projectsWithDoneStatus; trackBy: trackByProjectId"
+                 [ngClass]="getProjectStatusClass(project?.status || '')">
+
+                &lt;!&ndash; Project Header &ndash;&gt;
+                <div class="project-header">
+                    <div class="project-basic-info">
+                        <h4 class="project-name">{{ project?.projectName || project?.opportunity?.opportunityName || 'N/A' }}</h4>
+                        <div class="project-meta">
+                            <span class="standard-badge">{{ getOpportunityStandard(project) }}</span>
+                            <span class="file-number" *ngIf="project?.opportunity?.auditCode">
+                                File #: {{ project?.opportunity?.auditCode }}
+                            </span>
+                            <span class="opportunity-status"
+                                  [ngClass]="getStatusBadgeClass(project?.opportunity?.status || '')">
+                                {{ project?.opportunity?.status || 'N/A' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="project-actions">
+                        <button class="btn btn-sm btn-outline-primary" (click)="viewAuditStages(project)">
+                            <i class="fas fa-eye"></i> View Stages
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                    type="button" data-bs-toggle="dropdown">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" (click)="goToAuditPackage(project?.id || 0)">
+                                    <i class="fas fa-package"></i> Audit Package
+                                </a></li>
+                                <li><a class="dropdown-item" (click)="goToAuditNote(project?.id || 0)">
+                                    <i class="fas fa-note-sticky"></i> Audit Note
+                                </a></li>
+                                <li><a class="dropdown-item" (click)="goToRequestCertificate(project?.id || 0)">
+                                    <i class="fas fa-certificate"></i> Request Certificate
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                &lt;!&ndash; Opportunity Details &ndash;&gt;
+                <div class="opportunity-details" *ngIf="project?.opportunity">
+                    <div class="detail-row">
+                        <span class="label">Opportunity:</span>
+                        <span class="value">{{ project.opportunity?.opportunityName || 'N/A' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Assigned Auditor:</span>
+                        <span class="value">{{ getOpportunityAssignedAuditor(project) }}
+</span>
+                    </div>
+                </div>
+
+                &lt;!&ndash; Audit Stages Table &ndash;&gt;
+                <div class="audit-stages-section" *ngIf="hasAuditStages(project)">
+                    <h5 class="stages-title">Audit Stages</h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm audit-stages-table">
+                            <thead>
+                            <tr>
+                                <th>Audit Code</th>
+                                <th>Team Leader</th>
+                                <th>Audit Team</th>
+                                <th>Witness Audit?</th>
+                                <th>Audit Type</th>
+                                <th>Quotation Days</th>
+                                <th>Planned Dates</th>
+                                <th>Assigned Days</th>
+                                <th>Tentative Dates</th>
+                                <th>Confirmed Dates</th>
+                                <th>Status</th>
+                                <th>Certificate Details</th>
+                                <th>Payment Details</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let stage of getOrderedStages(project); trackBy: trackByStageId"
+                                [ngClass]="'stage-' + (stage && stage.stageType ? stage.stageType.toLowerCase().replace(' ', '-') : '')"
+                            >
+
+                                <td class="stage-type-cell">
+                                    <strong>{{ stage?.stageType || 'N/A' }}</strong>
+                                    <small class="audit-code" *ngIf="stage?.auditCode">
+                                        {{ stage?.auditCode }}
+                                    </small>
+                                </td>
+
+                                <td>{{ stage?.teamLeader || 'Lead Auditor/Verifying Auditor - ' + getOpportunityAssignedAuditor(project) }}</td>
+                                <td>{{ stage?.auditTeam || (stage?.quotationDays || 0) + ' day(s)' }}</td>
+                                <td class="text-center">
+                                    <span class="badge" [ngClass]="stage?.witnessAudit ? 'badge-success' : 'badge-secondary'">
+                                        {{ stage?.witnessAudit ? 'Yes' : 'No' }}
+                                    </span>
+                                </td>
+                                <td>
+                                   <span class="audit-type-badge"
+                                         [ngClass]="getAuditTypeClass(stage)">
+  {{ stage?.auditType || 'N/A' }}
+</span>
+
+                                </td>
+                                <td class="text-center">{{ stage?.quotationDays || 0 }}</td>
+                                <td>
+                                    <div class="dates-info">
+                                        <div *ngIf="stage?.auditPlanSentDate" class="date-item">
+                                            <small>Audit Plan Sent:</small><br>
+                                            {{ formatDate(stage.auditPlanSentDate) }}
+                                        </div>
+                                        <div *ngIf="stage?.plannedDates" class="date-item">
+                                            <small>Planned:</small><br>
+                                            {{ formatDate(stage.plannedDates) }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">{{ stage?.assignedDays || stage?.quotationDays || 0 }}</td>
+                                <td>{{ stage?.tentativeDates ? formatDate(stage.tentativeDates) : 'N/A' }}</td>
+                                <td>{{ stage?.confirmedDates ? formatDate(stage.confirmedDates) : 'N/A' }}</td>
+                                <td>
+                                    <span class="badge stage-status-badge" [ngClass]="getStatusBadgeClass(stage?.status || '')">
+                                        {{ stage?.status || 'N/A' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div *ngIf="stage?.status === 'Completed'">
+                                        <div *ngIf="stage?.releaseDate">
+                                            <small>Release Date:</small><br>
+                                            {{ formatDate(stage.releaseDate) }}
+                                        </div>
+
+                                    </div>
+                                    <span class="text-muted" *ngIf="stage?.status !== 'Completed'">N/A</span>
+                                </td>
+                                <td>
+                                    <div *ngIf="stage?.paymentNotes || stage?.status === 'Completed'">
+                                        <small>Payment Notes:</small><br>
+                                        {{ stage?.paymentNotes || 'N/A' }}
+                                    </div>
+                                    <button class="btn btn-xs btn-outline-success" *ngIf="stage?.status === 'Completed'">
+                                        Add Payment Details
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-primary btn-xs" title="Edit Stage" *ngIf="canEditProject(project)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-outline-info btn-xs dropdown-toggle" data-bs-toggle="dropdown" title="More Actions">
+                                            Action
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="#">View Details</a></li>
+                                            <li><a class="dropdown-item" href="#">Download Report</a></li>
+                                            <li><a class="dropdown-item" href="#">Update Status</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                &lt;!&ndash; Required Documents Check &ndash;&gt;
+                <div class="documents-check" *ngIf="project?.opportunity">
+                    <h6>Contract Documents Status:</h6>
+                    <div class="documents-status">
+                        <span class="badge" [ngClass]="hasRequiredDocuments(project) ? 'badge-success' : 'badge-warning'">
+                            {{ hasRequiredDocuments(project) ? 'All Required Documents Available' : 'Missing Documents' }}
+                        </span>
+
+                        <div class="missing-docs" *ngIf="!hasRequiredDocuments(project)">
+                            <small>Missing:</small>
+                            <ul class="missing-docs-list">
+                                <li *ngFor="let doc of getMissingDocuments(project)">{{ doc }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                &lt;!&ndash; Project Progress &ndash;&gt;
+                &lt;!&ndash; Project Progress &ndash;&gt;
+                <div class="project-progress">
+                    <div class="progress-info">
+                        <span class="progress-label">Overall Progress:</span>
+                        <span class="progress-percentage">{{ getProjectProgress(project) || 0 }}%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar"
+                             [style.width.%]="getProjectProgress(project) || 0"
+                             [ngClass]="getProjectProgress(project) === 100 ? 'bg-success' : 'bg-info'">
+                        </div>
+                    </div>
+                    <small class="next-stage-info">
+                        Next Stage: {{ getNextAuditStage(project) || 'N/A' }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    &lt;!&ndash; No Projects Message &ndash;&gt;
+    <div class="no-projects-message" *ngIf="!loading && (!projectsWithDoneStatus || projectsWithDoneStatus.length === 0)">
+        <div class="empty-state">
+            <i class="fas fa-folder-open fa-3x"></i>
+            <h4>No Projects Found</h4>
+            <p>No projects were found with opportunities having "Done" status for this company.</p>
+            <button class="btn btn-primary" (click)="refreshData()">
+                <i class="fas fa-refresh"></i> Refresh Data
+            </button>
+        </div>
+    </div>
+</div>
+
+&lt;!&ndash; Audit Stages Modal &ndash;&gt;
+<div class="modal fade" id="auditStagesModal" tabindex="-1" *ngIf="selectedProject">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Audit Stages - {{ selectedProject?.projectName || 'N/A' }}
+                </h5>
+                <button type="button" class="btn-close" (click)="closeAuditStagesModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive" *ngIf="hasAuditStages(selectedProject)">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Stage</th>
+                            <th>Status</th>
+                            <th>Team Leader</th>
+                            <th>Audit Type</th>
+                            <th>Days</th>
+                            <th>Dates</th>
+                            <th>Progress</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let stage of getOrderedStages(selectedProject)">
+                            <td><strong>{{ stage?.stageType || 'N/A' }}</strong></td>
+                            <td>
+                                <span class="badge" [ngClass]="getStatusBadgeClass(stage?.status || '')">
+                                    {{ stage?.status || 'N/A' }}
+                                </span>
+                            </td>
+                            <td>{{ stage?.teamLeader || 'Not assigned' }}</td>
+                            <td>{{ stage?.auditType || 'N/A' }}</td>
+                            <td>{{ stage?.quotationDays || 0 }} / {{ stage?.assignedDays || 0 }}</td>
+                            <td>
+                                <div *ngIf="stage?.confirmedDates">
+                                    <strong>Confirmed:</strong> {{ formatDate(stage.confirmedDates) }}
+                                </div>
+                                <div *ngIf="stage?.tentativeDates && !stage?.confirmedDates">
+                                    <strong>Tentative:</strong> {{ formatDate(stage.tentativeDates) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stage-progress-indicator"
+                                     [ngClass]="'stage-' + (stage?.stageType?.toLowerCase()?.replace(' ', '-') || '')">
+                                    {{ stage?.status || 'N/A' }}
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeAuditStagesModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    <div *ngFor="let opp of opportunities">
+        <h2>{{ opp['company']?.['name'] }} - {{ opp['opportunityName'] }}</h2>
+        <div *ngFor="let project of opp['projects']">
+            {{ project.projectName }}
+        </div>
+
+
+        <div *ngIf="opp.status === 'done'">
+            <div *ngFor="let project of opp.projects">
+                <h3>Projet {{ project.projectName }}</h3>
+                <table>
+                    <tr>
+                        <th>Team Leader</th>
+                        <th>Audit Team</th>
+                        <th>Witness Audit?</th>
+                        <th>Audit Type</th>
+                        <th>Quotation Days</th>
+                        <th>Dates</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                    <tr>
+                        <td>{{ project.assignedAuditor || '-' }}</td>
+                        <td>{{ project.auditStages?.[0]?.auditTeam || '-' }}</td>
+                        <td>{{ project.auditStages?.[0]?.witnessAudit ? 'Yes' : 'No' }}</td>
+                        <td>{{ project.auditStages?.[0]?.auditType || '-' }}</td>
+                        <td>{{ project.auditStages?.[0]?.quotationDays || '-' }}</td>
+                        <td>{{ project.auditStages?.[0]?.plannedDates || '-' }}</td>
+                        <td>{{ project.status }}</td>
+                        <td>{{ project.paymentDetails || '-' }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<style>
+    /* Component Styles */
+    .project-list-container {
+        padding: 20px;
+        background-color: #f8f9fa;
+        min-height: 100vh;
+    }
+
+    .header-section {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .company-info h2 {
+        margin: 0;
+        color: #2c3e50;
+    }
+
+    .company-id {
+        color: #7f8c8d;
+        margin: 5px 0 0 0;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #3498db;
+    }
+
+    .stat-label {
+        color: #7f8c8d;
+        margin-top: 5px;
+    }
+
+    .section-title {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #3498db;
+    }
+
+    .project-cards-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .project-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .project-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .project-name {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .project-meta {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    .standard-badge, .opportunity-status {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .standard-badge {
+        background-color: #f39c12;
+        color: white;
+    }
+
+    .file-number {
+        color: #ecf0f1;
+        font-size: 0.9rem;
+    }
+
+    .opportunity-details {
+        padding: 15px 20px;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 5px;
+    }
+
+    .detail-row .label {
+        font-weight: bold;
+        width: 150px;
+        color: #495057;
+    }
+
+    .detail-row .value {
+        color: #212529;
+    }
+
+    .audit-stages-section {
+        padding: 20px;
+    }
+
+    .stages-title {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .audit-stages-table {
+        font-size: 0.85rem;
+    }
+
+    .audit-stages-table th {
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        font-weight: 600;
+        color: #495057;
+        padding: 8px 6px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .audit-stages-table td {
+        padding: 8px 6px;
+        vertical-align: middle;
+        border-color: #dee2e6;
+    }
+
+    .stage-type-cell {
+        background-color: #f1f3f4;
+        font-weight: bold;
+    }
+
+    .audit-code {
+        display: block;
+        color: #6c757d;
+        font-size: 0.75rem;
+    }
+
+    .dates-info .date-item {
+        margin-bottom: 5px;
+    }
+
+    .dates-info small {
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .audit-type-badge {
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+
+    .audit-type-onsite-audit {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .audit-type-remote-audit {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .audit-type-hybrid-audit {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+    .stage-status-badge {
+        font-size: 0.75rem;
+    }
+
+    .stage-status-done,
+    .stage-status-completed {
+        background-color: #28a745 !important;
+    }
+
+    .stage-status-in-progress {
+        background-color: #ffc107 !important;
+        color: #212529 !important;
+    }
+
+    .stage-status-assigned {
+        background-color: #17a2b8 !important;
+    }
+
+    .stage-status-unknown {
+        background-color: #6c757d !important;
+    }
+
+    .certificate-info,
+    .payment-info {
+        font-size: 0.8rem;
+    }
+
+    .certificate-info small,
+    .payment-info small {
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .btn-xs {
+        padding: 2px 6px;
+        font-size: 0.75rem;
+    }
+
+    .documents-check {
+        padding: 15px 20px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .documents-check h6 {
+        margin-bottom: 10px;
+        color: #495057;
+    }
+
+    .documents-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .missing-docs-list {
+        margin: 5px 0 0 0;
+        padding-left: 15px;
+        font-size: 0.8rem;
+        color: #856404;
+    }
+
+    .project-progress {
+        padding: 15px 20px;
+        background-color: #ffffff;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .progress-label {
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .progress-percentage {
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    .progress {
+        height: 8px;
+        margin-bottom: 8px;
+    }
+
+    .next-stage-info {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .loading-container {
+        text-align: center;
+        padding: 50px;
+    }
+
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .no-projects-message {
+        text-align: center;
+        padding: 50px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .empty-state {
+        color: #6c757d;
+    }
+
+    .empty-state i {
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h4 {
+        margin-bottom: 15px;
+        color: #495057;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .header-section {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .project-header {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .audit-stages-table {
+            font-size: 0.75rem;
+        }
+
+        .audit-stages-table th,
+        .audit-stages-table td {
+            padding: 4px 3px;
+        }
+
+        .stats-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .project-meta {
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+
+    /* Print Styles */
+    @media print {
+        .header-actions,
+        .project-actions,
+        .btn,
+        .dropdown {
+            display: none !important;
+        }
+
+        .project-card {
+            break-inside: avoid;
+            box-shadow: none;
+            border: 1px solid #dee2e6;
+        }
+    }
+</style>-->
+<!-- Enhanced Project Table Template -->
+<!--<div class="project-list-container">
+    &lt;!&ndash; Header Section &ndash;&gt;
+    <div class="header-section">
+        <div class="company-info">
+            <h2>{{ companyName }}</h2>
+            <p class="company-id">Company ID: {{ companyId }}</p>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn btn-secondary" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn btn-success" (click)="refreshData()">
+                <i class="fas fa-refresh"></i> Refresh
+            </button>
+            <button type="button" class="btn btn-info" (click)="exportProjects()" *ngIf="userRole === 'admin'">
+                <i class="fas fa-download"></i> Export CSV
+            </button>
+        </div>
+    </div>
+
+    &lt;!&ndash; Statistics Cards &ndash;&gt;
+    <div class="stats-cards" *ngIf="!loading">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.totalProjects || 0 }}</div>
+            <div class="stat-label">Total Projects</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.completedStages || 0 }}</div>
+            <div class="stat-label">Completed Stages</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.inProgressStages || 0 }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.pendingStages || 0 }}</div>
+            <div class="stat-label">Pending Stages</div>
+        </div>
+    </div>
+
+    &lt;!&ndash; Loading State &ndash;&gt;
+    <div class="loading-container" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Loading projects...</p>
+    </div>
+
+    &lt;!&ndash; Projects Section with Enhanced Table &ndash;&gt;
+    <div class="projects-section" *ngIf="!loading">
+        <h3 class="section-title">Project Audit Stages</h3>
+
+        &lt;!&ndash; For each opportunity with Done status, create a project table &ndash;&gt;
+        <div *ngFor="let opp of opportunities" class="opportunity-project-container">
+            <div *ngIf="opp.status?.toLowerCase() === 'done'" class="project-container">
+
+                &lt;!&ndash; Project Header &ndash;&gt;
+                <div class="project-header-info">
+                    <h4>{{ opp['company']?.['name'] }} - {{ opp['opportunityName'] }}</h4>
+                    <div class="project-meta">
+                        <span class="badge badge-success">{{ opp.status }}</span>
+                        <span class="standard-info">{{ opp['standard'] || 'N/A' }}</span>
+                        <span class="auditor-info">Auditor: {{ opp['assignedAuditor'] || 'TBD' }}</span>
+                    </div>
+                </div>
+
+                &lt;!&ndash; Enhanced Audit Stages Table &ndash;&gt;
+                <div class="audit-table-container">
+                    <table class="table table-bordered audit-stages-enhanced-table">
+                        <thead class="table-dark">
+                        <tr>
+                            <th rowspan="2" class="audit-code-header">Audit Code</th>
+                            <th rowspan="2" class="team-leader-header">Team Leader</th>
+                            <th rowspan="2" class="audit-team-header">Audit Team</th>
+                            <th rowspan="2" class="witness-header">Witness Audit?</th>
+                            <th rowspan="2" class="audit-type-header">Audit Type</th>
+                            <th rowspan="2" class="quotation-header">Quotation Days</th>
+                            <th colspan="4" class="dates-header">Dates</th>
+                            <th rowspan="2" class="assigned-header">Assigned Days</th>
+                            <th rowspan="2" class="tentative-header">Tentative Dates</th>
+                            <th rowspan="2" class="confirmed-header">Confirmed Dates</th>
+                            <th rowspan="2" class="status-header">Status</th>
+                            <th rowspan="2" class="certificate-header">Certificate Details</th>
+                            <th rowspan="2" class="payment-header">Payment Details</th>
+                            <th rowspan="2" class="actions-header">Actions</th>
+                        </tr>
+                        <tr>
+                            <th class="sub-header">Audit Plan Sent</th>
+                            <th class="sub-header">Audit Report Sent</th>
+                            <th class="sub-header">Handed For Review</th>
+                            <th class="sub-header">Submitted to CA</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        &lt;!&ndash; Generate 4 rows for each project: M1, S1, S2, M2 &ndash;&gt;
+                        <tr *ngFor="let auditCode of getStageNames()"
+                            [ngClass]="'stage-row audit-' + auditCode.toLowerCase()">
+
+                            &lt;!&ndash; Audit Code &ndash;&gt;
+                            <td class="stage-name-cell">
+                                <strong>{{ auditCode }}</strong>
+                                <br>
+                                <small class="stage-code">{{ generateStageCode(opp, auditCode) }}</small>
+                            </td>
+
+                            &lt;!&ndash; Team Leader &ndash;&gt;
+                            <td class="team-leader-cell">
+                                {{ getTeamLeader(opp, auditCode) }}
+                            </td>
+
+                            &lt;!&ndash; Audit Team &ndash;&gt;
+                            <td class="audit-team-cell">
+                                {{ getAuditTeam(opp, auditCode) }}
+                            </td>
+
+                            &lt;!&ndash; Witness Audit &ndash;&gt;
+                            <td class="witness-cell text-center">
+                                    <span class="badge"
+                                          [ngClass]="getWitnessAudit(opp, auditCode) ? 'badge-success' : 'badge-secondary'">
+                                        {{ getWitnessAudit(opp, auditCode) ? 'Yes' : 'No' }}
+                                    </span>
+                            </td>
+
+                            &lt;!&ndash; Audit Type &ndash;&gt;
+                            <td class="audit-type-cell">
+                                    <span class="audit-type-badge"
+                                          [ngClass]="'type-' + getAuditType(opp, auditCode).toLowerCase().replace(' ', '-')">
+                                        {{ getAuditType(opp, auditCode) }}
+                                    </span>
+                            </td>
+
+                            &lt;!&ndash; Quotation Days &ndash;&gt;
+                            <td class="quotation-days-cell text-center">
+                                {{ getQuotationDays(opp, auditCode) }}
+                            </td>
+
+                            &lt;!&ndash; Audit Plan Sent Date &ndash;&gt;
+                            <td class="date-cell">
+                                {{ formatDate(getAuditPlanSentDate(opp, auditCode)) }}
+                            </td>
+
+                            &lt;!&ndash; Audit Report Sent Date &ndash;&gt;
+                            <td class="date-cell">
+                                {{ formatDate(getAuditReportSentDate(opp, auditCode)) }}
+                            </td>
+
+                            &lt;!&ndash; Handed For Review Date &ndash;&gt;
+                            <td class="date-cell">
+                                {{ formatDate(getHandedForReviewDate(opp, auditCode)) }}
+                            </td>
+
+                            &lt;!&ndash; Submitted to CA Date &ndash;&gt;
+                            <td class="date-cell">
+                                {{ formatDate(getSubmittedToCaDate(opp, auditCode)) }}
+                            </td>
+
+                            &lt;!&ndash; Assigned Days &ndash;&gt;
+                            <td class="assigned-days-cell text-center">
+                                {{ getAssignedDays(opp, auditCode) }}
+                            </td>
+
+                            &lt;!&ndash; Tentative Dates &ndash;&gt;
+                            <td class="tentative-dates-cell">
+                                {{ formatDate(getTentativeDates(opp, auditCode)) }}
+                            </td>
+
+                            &lt;!&ndash; Confirmed Dates &ndash;&gt;
+                            <td class="confirmed-dates-cell">
+                                {{ formatDate(getConfirmedDates(opp, auditCode)) }}
+                            </td>
+
+                            &lt;!&ndash; Status &ndash;&gt;
+                            <td class="status-cell">
+                                    <span class="badge stage-status-badge"
+                                          [ngClass]="getStatusBadgeClass(getStageStatus(opp, auditCode))">
+                                        {{ getStageStatus(opp, auditCode) }}
+                                    </span>
+                            </td>
+
+                            &lt;!&ndash; Certificate Details &ndash;&gt;
+                            <td class="certificate-cell">
+                                <div *ngIf="getStageStatus(opp, auditCode) === 'Completed'" class="certificate-info">
+                                    <div *ngIf="getReleaseDate(opp, auditCode)" class="release-date">
+                                        <small>Release Date:</small><br>
+                                        {{ formatDate(getReleaseDate(opp, auditCode)) }}
+                                    </div>
+                                    <div *ngIf="getCertificateDetails(opp, auditCode)" class="cert-details">
+                                        {{ getCertificateDetails(opp, auditCode) }}
+                                    </div>
+                                </div>
+                                <span class="text-muted" *ngIf="getStageStatus(opp, auditCode) !== 'Completed'">
+                                        N/A
+                                    </span>
+                            </td>
+
+                            &lt;!&ndash; Payment Details &ndash;&gt;
+                            <td class="payment-cell">
+                                <div *ngIf="getPaymentNotes(opp, auditCode)" class="payment-notes">
+                                    {{ getPaymentNotes(opp, auditCode) }}
+                                </div>
+                                <button class="btn btn-xs btn-outline-success"
+                                        *ngIf="getStageStatus(opp, auditCode) === 'Completed' && !getPaymentNotes(opp, auditCode)"
+                                        (click)="addPaymentDetails(opp, auditCode)">
+                                    Add Payment Details
+                                </button>
+                                <span class="text-muted"
+                                      *ngIf="getStageStatus(opp, auditCode) !== 'Completed' && !getPaymentNotes(opp, auditCode)">
+                                        N/A
+                                    </span>
+                            </td>
+
+                            &lt;!&ndash; Actions &ndash;&gt;
+                            <td class="actions-cell">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary btn-xs"
+                                            title="Edit Stage"
+                                            (click)="editStage(opp, auditCode)"
+                                            *ngIf="userRole === 'admin'">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-info btn-xs dropdown-toggle"
+                                                data-bs-toggle="dropdown"
+                                                title="More Actions">
+                                            Action
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" (click)="viewStageDetails(opp, auditCode)">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </a></li>
+                                            <li><a class="dropdown-item" (click)="downloadStageReport(opp, auditCode)"
+                                                   *ngIf="getStageStatus(opp, auditCode) === 'Completed'">
+                                                <i class="fas fa-download"></i> Download Report
+                                            </a></li>
+                                            <li><a class="dropdown-item" (click)="updateStageStatus(opp, auditCode)">
+                                                <i class="fas fa-edit"></i> Update Status
+                                            </a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" (click)="goToAuditPackage(opp, auditCode)">
+                                                <i class="fas fa-package"></i> Audit Package
+                                            </a></li>
+                                            <li><a class="dropdown-item" (click)="goToAuditNote(opp, auditCode)">
+                                                <i class="fas fa-note-sticky"></i> Audit Note
+                                            </a></li>
+                                            <li><a class="dropdown-item" (click)="goToRequestCertificate(opp, auditCode)"
+                                                   *ngIf="auditCode === 'S2' || auditCode === 'M2'">
+                                                <i class="fas fa-certificate"></i> Request Certificate
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                &lt;!&ndash; Project Summary &ndash;&gt;
+                <div class="project-summary">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="summary-card">
+                                <h6>Project Progress</h6>
+                                <div class="progress">
+                                    <div class="progress-bar"
+                                         [style.width.%]="getProjectProgressForOpportunity(opp)"
+                                         [ngClass]="getProjectProgressForOpportunity(opp) === 100 ? 'bg-success' : 'bg-info'">
+                                    </div>
+                                </div>
+                                <small>{{ getProjectProgressForOpportunity(opp) }}% Complete</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="summary-card">
+                                <h6>Next Action Required</h6>
+                                <p class="next-action">{{ getNextActionRequired(opp) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    &lt;!&ndash; No Projects Message &ndash;&gt;
+    <div class="no-projects-message" *ngIf="!loading && opportunities.length === 0">
+        <div class="empty-state">
+            <i class="fas fa-folder-open fa-3x"></i>
+            <h4>No Projects Found</h4>
+            <p>No opportunities with "Done" status found for this company.</p>
+            <button class="btn btn-primary" (click)="refreshData()">
+                <i class="fas fa-refresh"></i> Refresh Data
+            </button>
+        </div>
+    </div>
+</div>-->
+<div class="project-list-container">
+    <!-- Header Section -->
+    <div class="header-section">
+        <div class="company-info">
+            <h2>{{ companyName }}</h2>
+            <p class="company-id">Company ID: {{ companyId }}</p>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn btn-secondary" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn btn-success" (click)="refreshData()">
+                <i class="fas fa-refresh"></i> Refresh
+            </button>
+            <button type="button" class="btn btn-info" (click)="exportProjects()" *ngIf="userRole === 'admin'">
+                <i class="fas fa-download"></i> Export CSV
+            </button>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-cards" *ngIf="!loading">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.totalProjects || 0 }}</div>
+            <div class="stat-label">Total Audit Stages</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.completedStages || 0 }}</div>
+            <div class="stat-label">Completed Stages</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.inProgressStages || 0 }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.pendingStages || 0 }}</div>
+            <div class="stat-label">Pending Stages</div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Loading projects...</p>
+    </div>
+
+    <!-- Projects Section with Enhanced Table -->
+    <div class="projects-section" *ngIf="!loading">
+        <h3 class="section-title">Audit Stages Dashboard</h3>
+
+        <!-- For each opportunity with Done status and created projects -->
+        <div *ngFor="let opp of getOpportunitiesWithDoneStatus()" class="opportunity-project-container">
+            <div class="project-container">
+
+                <!-- Project Header -->
+                <div class="project-header-info">
+                    <h4>{{ opp['company']?.['name'] }} - {{ opp['opportunityName'] }}</h4>
+                    <div class="project-meta">
+                        <span class="badge badge-success">{{ opp.status }}</span>
+                        <span class="standard-info">{{ opp['standard'] || 'N/A' }}</span>
+                        <span class="auditor-info">Auditor: {{ opp['assignedAuditor'] || 'TBD' }}</span>
+                        <span class="progress-info">Progress: {{ getProjectProgressForOpportunity(opp.id) }}%</span>
+                    </div>
+                </div>
+
+                <!-- Enhanced Audit Stages Table -->
+                <div class="audit-table-container">
+                    <table class="table table-bordered audit-stages-enhanced-table">
+                        <thead class="table-dark">
+                        <tr>
+                            <th rowspan="2" class="audit-code-header">Audit Code</th>
+                            <th rowspan="2" class="team-leader-header">Team Leader</th>
+                            <th rowspan="2" class="audit-team-header">Audit Team</th>
+                            <th rowspan="2" class="witness-header">Witness Audit?</th>
+                            <th rowspan="2" class="audit-type-header">Audit Type</th>
+                            <th rowspan="2" class="quotation-header">Quotation Days</th>
+                            <th colspan="4" class="dates-header">Dates</th>
+                            <th rowspan="2" class="assigned-header">Assigned Days</th>
+                            <th rowspan="2" class="tentative-header">Tentative Dates</th>
+                            <th rowspan="2" class="confirmed-header">Confirmed Dates</th>
+                            <th rowspan="2" class="status-header">Status</th>
+                            <th rowspan="2" class="certificate-header">Certificate Details</th>
+                            <th rowspan="2" class="payment-header">Payment Details</th>
+                            <th rowspan="2" class="actions-header">Actions</th>
+                        </tr>
+                        <tr>
+                            <th class="sub-header">Audit Plan Sent</th>
+                            <th class="sub-header">Audit Report Sent</th>
+                            <th class="sub-header">Handed For Review</th>
+                            <th class="sub-header">Submitted to CA</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Generate 4 rows for each project: M1, S1, S2, M2 -->
+                        <tr *ngFor="let auditCode of getStageNames(); trackBy: trackByStageName"
+                            [ngClass]="'stage-row audit-' + auditCode.toLowerCase()">
+
+                            <!-- Audit Code -->
+                            <td class="stage-name-cell">
+                                <strong>{{ auditCode }}</strong>
+                                <br>
+                                <small class="stage-code">{{ generateStageCode(opp, auditCode) }}</small>
+                            </td>
+
+                            <!-- Team Leader -->
+                            <td class="team-leader-cell">
+                                {{ getTeamLeader(opp.id, auditCode) }}
+                            </td>
+
+                            <!-- Audit Team -->
+                            <td class="audit-team-cell">
+                                {{ getAuditTeam(opp.id, auditCode) }}
+                            </td>
+
+                            <!-- Witness Audit -->
+                            <td class="witness-cell text-center">
+                                <span class="badge"
+                                      [ngClass]="getWitnessAudit(opp.id, auditCode) ? 'badge-success' : 'badge-secondary'">
+                                    {{ getWitnessAudit(opp.id, auditCode) ? 'Yes' : 'No' }}
+                                </span>
+                            </td>
+
+                            <!-- Audit Type -->
+                            <td class="audit-type-cell">
+                                <span class="audit-type-badge"
+                                      [ngClass]="'type-' + getAuditType(opp.id, auditCode).toLowerCase().replace(' ', '-')">
+                                    {{ getAuditType(opp.id, auditCode) }}
+                                </span>
+                            </td>
+
+                            <!-- Quotation Days -->
+                            <td class="quotation-days-cell text-center">
+                                {{ getQuotationDays(opp.id, auditCode) }}
+                            </td>
+
+                            <!-- Audit Plan Sent Date -->
+                            <td class="date-cell">
+                                {{ formatDate(getAuditPlanSentDate(opp.id, auditCode)) }}
+                            </td>
+
+                            <!-- Audit Report Sent Date -->
+                            <td class="date-cell">
+                                {{ formatDate(getAuditReportSentDate(opp.id, auditCode)) }}
+                            </td>
+
+                            <!-- Handed For Review Date -->
+                            <td class="date-cell">
+                                {{ formatDate(getHandedForReviewDate(opp.id, auditCode)) }}
+                            </td>
+
+                            <!-- Submitted to CA Date -->
+                            <td class="date-cell">
+                                {{ formatDate(getSubmittedToCaDate(opp.id, auditCode)) }}
+                            </td>
+
+                            <!-- Assigned Days -->
+                            <td class="assigned-days-cell text-center">
+                                {{ getAssignedDays(opp.id, auditCode) }}
+                            </td>
+
+                            <!-- Tentative Dates -->
+                            <td class="tentative-dates-cell">
+                                {{ formatDate(getTentativeDates(opp.id, auditCode)) }}
+                            </td>
+
+                            <!-- Confirmed Dates -->
+                            <td class="confirmed-dates-cell">
+                                {{ formatDate(getConfirmedDates(opp.id, auditCode)) }}
+                            </td>
+
+                            <!-- Status -->
+                            <td class="status-cell">
+                                <span class="badge stage-status-badge"
+                                      [ngClass]="getStatusBadgeClass(getStageStatus(opp.id, auditCode))">
+                                    {{ getStageStatus(opp.id, auditCode) }}
+                                </span>
+                            </td>
+
+                            <!-- Certificate Details -->
+                            <td class="certificate-cell">
+                                <div *ngIf="getStageStatus(opp.id, auditCode) === 'Completed'" class="certificate-info">
+                                    <div *ngIf="getReleaseDate(opp.id, auditCode)" class="release-date">
+                                        <small>Release Date:</small><br>
+                                        {{ formatDate(getReleaseDate(opp.id, auditCode)) }}
+                                    </div>
+                                    <div *ngIf="getCertificateDetails(opp.id, auditCode)" class="cert-details">
+                                        {{ getCertificateDetails(opp.id, auditCode) }}
+                                    </div>
+                                </div>
+                                <span class="text-muted" *ngIf="getStageStatus(opp.id, auditCode) !== 'Completed'">
+                                    N/A
+                                </span>
+                            </td>
+
+                            <!-- Payment Details -->
+                            <td class="payment-cell">
+                                <div *ngIf="getPaymentNotes(opp.id, auditCode)" class="payment-notes">
+                                    {{ getPaymentNotes(opp.id, auditCode) }}
+                                </div>
+                                <button class="btn btn-xs btn-outline-success"
+                                        *ngIf="getStageStatus(opp.id, auditCode) === 'Completed' && !getPaymentNotes(opp.id, auditCode)"
+                                        (click)="addPaymentDetails(opp.id, auditCode)">
+                                    Add Payment Details
+                                </button>
+                                <span class="text-muted"
+                                      *ngIf="getStageStatus(opp.id, auditCode) !== 'Completed' && !getPaymentNotes(opp.id, auditCode)">
+                                    N/A
+                                </span>
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="actions-cell">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary btn-xs"
+                                            title="Edit Stage"
+                                            (click)="editStage(opp.id, auditCode)"
+                                            *ngIf="userRole === 'admin'">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-info btn-xs dropdown-toggle"
+                                                data-bs-toggle="dropdown"
+                                                title="More Actions">
+                                            Action
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" (click)="viewStageDetails(opp.id, auditCode)">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </a></li>
+                                            <li><a class="dropdown-item" (click)="downloadStageReport(opp.id, auditCode)"
+                                                   *ngIf="getStageStatus(opp.id, auditCode) === 'Completed'">
+                                                <i class="fas fa-download"></i> Download Report
+                                            </a></li>
+                                            <li><a class="dropdown-item" (click)="updateStageStatus(opp.id, auditCode)">
+                                                <i class="fas fa-edit"></i> Update Status
+                                            </a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" (click)="goToAuditPackage(opp.id, auditCode)">
+                                                <i class="fas fa-package"></i> Audit Package
+                                            </a></li>
+                                            <li><a class="dropdown-item" (click)="goToAuditNote(opp.id, auditCode)">
+                                                <i class="fas fa-note-sticky"></i> Audit Note
+                                            </a></li>
+                                            <li><a class="dropdown-item" (click)="goToRequestCertificate(opp.id, auditCode)"
+                                                   *ngIf="auditCode === 'S2' || auditCode === 'M2'">
+                                                <i class="fas fa-certificate"></i> Request Certificate
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Project Summary -->
+                <div class="project-summary">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="summary-card">
+                                <h6>Project Progress</h6>
+                                <div class="progress">
+                                    <div class="progress-bar"
+                                         [style.width.%]="getProjectProgressForOpportunity(opp.id)"
+                                         [ngClass]="getProjectProgressForOpportunity(opp.id) === 100 ? 'bg-success' : 'bg-info'">
+                                    </div>
+                                </div>
+                                <small>{{ getProjectProgressForOpportunity(opp.id) }}% Complete</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="summary-card">
+                                <h6>Next Action Required</h6>
+                                <p class="next-action">{{ getNextActionRequired(opp.id) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Projects Message -->
+    <div class="no-projects-message" *ngIf="!loading && getOpportunitiesWithDoneStatus().length === 0">
+        <div class="empty-state">
+            <i class="fas fa-folder-open fa-3x"></i>
+            <h4>No Audit Projects Found</h4>
+            <p>No opportunities with "Done" status found for this company, or projects are still being generated.</p>
+            <button class="btn btn-primary" (click)="refreshData()">
+                <i class="fas fa-refresh"></i> Refresh Data
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .project-list-container {
+        padding: 20px;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .company-info h2 {
+        margin: 0;
+        color: #333;
+    }
+
+    .company-id {
+        color: #666;
+        margin: 5px 0 0 0;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .stat-label {
+        color: #666;
+        margin-top: 5px;
+    }
+
+    .loading-container {
+        text-align: center;
+        padding: 50px;
+    }
+
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .projects-section {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+        margin-bottom: 20px;
+        color: #333;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+    }
+
+    .opportunity-project-container {
+        margin-bottom: 40px;
+    }
+
+    .project-header-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .project-header-info h4 {
+        margin: 0 0 10px 0;
+        color: #333;
+    }
+
+    .project-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .badge {
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        font-weight: bold;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .audit-table-container {
+        overflow-x: auto;
+        margin-bottom: 20px;
+    }
+
+    .audit-stages-enhanced-table {
+        width: 100%;
+        min-width: 1400px;
+        font-size: 0.85em;
+    }
+
+    .audit-stages-enhanced-table th,
+    .audit-stages-enhanced-table td {
+        padding: 8px 6px;
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid #dee2e6;
+    }
+
+    .audit-stages-enhanced-table th {
+        background-color: #343a40;
+        color: white;
+        font-weight: bold;
+    }
+
+    .stage-name-cell {
+        text-align: left !important;
+        min-width: 100px;
+    }
+
+    .stage-code {
+        color: #666;
+        font-size: 0.8em;
+    }
+
+    .team-leader-cell {
+        text-align: left !important;
+        min-width: 180px;
+    }
+
+    .date-cell {
+        min-width: 100px;
+        font-size: 0.8em;
+    }
+
+    .status-cell {
+        min-width: 100px;
+    }
+
+    .actions-cell {
+        min-width: 120px;
+    }
+
+    .btn-xs {
+        padding: 2px 6px;
+        font-size: 0.75em;
+    }
+
+    .dropdown-menu {
+        min-width: 180px;
+    }
+
+    .project-summary {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .summary-card {
+        padding: 15px;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .summary-card h6 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .progress {
+        height: 20px;
+        background-color: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 5px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        transition: width 0.3s ease;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .bg-info {
+        background-color: #17a2b8 !important;
+    }
+
+    .next-action {
+        margin: 0;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .no-projects-message {
+        text-align: center;
+        padding: 50px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .empty-state {
+        color: #666;
+    }
+
+    .empty-state i {
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h4 {
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .empty-state p {
+        margin-bottom: 20px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .header-section {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .project-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .audit-stages-enhanced-table {
+            font-size: 0.75em;
+        }
+
+        .stats-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .header-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+    }
+</style>
+<!-- Styles for Enhanced Table -->
+<!--
+<style>
+    .audit-stages-enhanced-table {
+        font-size: 0.875rem;
+        margin-bottom: 2rem;
+    }
+
+    .audit-stages-enhanced-table th {
+        background-color: #343a40;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid #454d55;
+    }
+
+    .audit-stages-enhanced-table .sub-header {
+        background-color: #495057;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .stage-row:nth-child(odd) {
+        background-color: #f8f9fa;
+    }
+
+    .stage-row:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    .stage-stage-1 {
+        border-left: 4px solid #007bff;
+    }
+
+    .stage-stage-2 {
+        border-left: 4px solid #28a745;
+    }
+
+    .stage-s1 {
+        border-left: 4px solid #ffc107;
+    }
+
+    .stage-s2 {
+        border-left: 4px solid #dc3545;
+    }
+
+    .audit-m1 {
+        border-left: 4px solid #17a2b8; /* Surveillance 1 */
+    }
+
+    .audit-s1 {
+        border-left: 4px solid #007bff; /* Stage 1 */
+    }
+
+    .audit-s2 {
+        border-left: 4px solid #28a745; /* Stage 2 */
+    }
+
+    .audit-m2 {
+        border-left: 4px solid #6f42c1; /* Surveillance 2 */
+    }
+
+    .stage-name-cell {
+        font-weight: bold;
+        min-width: 120px;
+    }
+
+    .stage-code {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .date-cell {
+        font-size: 0.8rem;
+        min-width: 100px;
+    }
+
+    .audit-type-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .type-onsite-audit {
+        background-color: #e3f2fd;
+        color: #1976d2;
+    }
+
+    .type-remote-audit {
+        background-color: #f3e5f5;
+        color: #7b1fa2;
+    }
+
+    .type-hybrid-audit {
+        background-color: #e8f5e8;
+        color: #388e3c;
+    }
+
+    .project-header-info {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .project-header-info h4 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .project-meta {
+        margin-top: 0.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .project-meta .badge {
+        font-size: 0.8rem;
+    }
+
+    .standard-info,
+    .auditor-info {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .project-summary {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .summary-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+    }
+
+    .summary-card h6 {
+        color: #495057;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+    }
+
+    .next-action {
+        color: #007bff;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .opportunity-project-container {
+        margin-bottom: 3rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .btn-xs {
+        padding: 0.125rem 0.375rem;
+        font-size: 0.75rem;
+        line-height: 1.25;
+        border-radius: 0.25rem;
+    }
+
+    .certificate-info {
+        font-size: 0.8rem;
+    }
+
+    .release-date {
+        margin-bottom: 0.25rem;
+    }
+
+    .cert-details {
+        color: #28a745;
+        font-weight: 500;
+    }
+
+    .payment-notes {
+        font-size: 0.8rem;
+        color: #495057;
+    }
+</style>-->

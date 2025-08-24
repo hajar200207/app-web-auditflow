@@ -1,0 +1,99 @@
+<!-- opportunity-review-form.component.html -->
+<div class="opportunity-review-form" [class.disabled]="disabled">
+    <h2>Opportunity Review Step</h2>
+    <p class="step-description">Complete all required tasks to proceed to the next step.</p>
+
+    <!-- Disabled Form Warning -->
+    <div class="form-warning" *ngIf="disabled">
+        <div class="alert alert-info">
+            <i class="fa fa-lock"></i>
+            <strong>Step Completed:</strong> This step has been completed and is now locked for editing.
+            All data is preserved for review.
+        </div>
+    </div>
+
+    <form class="review-form">
+        <div class="form-group" [class.completed]="opportunity.establishPrimaryContact">
+            <label class="checkbox-label">
+                <input
+                        type="checkbox"
+                        [checked]="opportunity.establishPrimaryContact"
+                        [disabled]="disabled"
+                        (change)="onCheckboxChange('establishPrimaryContact', $event)"
+                        name="establishPrimaryContact"
+                />
+                <span class="checkmark" [class.disabled]="disabled"></span>
+                <span class="label-text">Establish Primary Contact</span>
+                <i class="fa fa-check-circle completion-icon" *ngIf="opportunity.establishPrimaryContact"></i>
+            </label>
+            <p class="field-description">Identify and connect with the key decision-maker for this opportunity.</p>
+        </div>
+
+        <div class="form-group" [class.completed]="opportunity.identifyPainPoints">
+            <label class="checkbox-label">
+                <input
+                        type="checkbox"
+                        [checked]="opportunity.identifyPainPoints"
+                        [disabled]="disabled"
+                        (change)="onCheckboxChange('identifyPainPoints', $event)"
+                        name="identifyPainPoints"
+                />
+                <span class="checkmark" [class.disabled]="disabled"></span>
+                <span class="label-text">Identify Pain Points</span>
+                <i class="fa fa-check-circle completion-icon" *ngIf="opportunity.identifyPainPoints"></i>
+            </label>
+            <p class="field-description">Understand the client's main challenges and needs that our services can address.</p>
+        </div>
+
+        <div class="form-group" [class.completed]="opportunity.determineBudget">
+            <label class="checkbox-label">
+                <input
+                        type="checkbox"
+                        [checked]="opportunity.determineBudget"
+                        [disabled]="disabled"
+                        (change)="onCheckboxChange('determineBudget', $event)"
+                        name="determineBudget"
+                />
+                <span class="checkmark" [class.disabled]="disabled"></span>
+                <span class="label-text">Determine Budget</span>
+                <i class="fa fa-check-circle completion-icon" *ngIf="opportunity.determineBudget"></i>
+            </label>
+            <p class="field-description">Confirm the client's budget range and financial capacity for this project.</p>
+        </div>
+
+        <div class="form-group" [class.completed]="opportunity.confirmTimeline">
+            <label class="checkbox-label">
+                <input
+                        type="checkbox"
+                        [checked]="opportunity.confirmTimeline"
+                        [disabled]="disabled"
+                        (change)="onCheckboxChange('confirmTimeline', $event)"
+                        name="confirmTimeline"
+                />
+                <span class="checkmark" [class.disabled]="disabled"></span>
+                <span class="label-text">Confirm Timeline</span>
+                <i class="fa fa-check-circle completion-icon" *ngIf="opportunity.confirmTimeline"></i>
+            </label>
+            <p class="field-description">Establish expected project timeline and key milestones with the client.</p>
+        </div>
+
+        <div class="form-status" [class.completed]="isFormValid()" [class.disabled]="disabled">
+            <div class="status-indicator">
+                <i class="fa fa-check-circle text-success" *ngIf="isFormValid()"></i>
+                <i class="fa fa-circle-o text-muted" *ngIf="!isFormValid()"></i>
+                <span *ngIf="isFormValid() && !disabled" class="text-success">
+                    All requirements completed - Ready to proceed
+                </span>
+                <span *ngIf="isFormValid() && disabled" class="text-info">
+                    Step completed and locked
+                </span>
+                <span *ngIf="!isFormValid() && !disabled" class="text-warning">
+                    Please complete all requirements to proceed
+                </span>
+                <span *ngIf="!isFormValid() && disabled" class="text-muted">
+                    Step was not completed when locked
+                </span>
+            </div>
+        </div>
+    </form>
+</div>

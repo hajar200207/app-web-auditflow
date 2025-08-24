@@ -1,0 +1,338 @@
+<div class="proposal-section" [class.disabled]="disabled">
+    <h2>Proposal Step</h2>
+    <p class="step-description">Create and finalize the proposal details for this opportunity.</p>
+
+    <!-- Disabled Form Warning -->
+    <div class="form-warning" *ngIf="disabled">
+        <div class="alert alert-info">
+            <i class="fa fa-lock"></i>
+            <strong>Step Completed:</strong> This step has been completed and is now locked for editing.
+            All data is preserved for review.
+        </div>
+    </div>
+
+    <!-- Saving Indicator -->
+    <div class="saving-indicator" *ngIf="isSaving">
+        <i class="fa fa-spinner fa-spin"></i> Saving...
+    </div>
+
+    <!-- Button to show table -->
+    <div class="table-controls" *ngIf="!showTable && !disabled">
+        <button type="button" class="btn btn-primary" (click)="showTableData()">
+            <i class="fa fa-table"></i> Show Proposal Table
+        </button>
+    </div>
+
+    <!-- Show table info if disabled and table was shown -->
+    <div class="table-info" *ngIf="!showTable && disabled">
+        <div class="alert alert-warning">
+            <i class="fa fa-info-circle"></i>
+            Proposal table was not created in this step.
+        </div>
+    </div>
+
+    <!-- Proposal Table -->
+    <div class="table-container" *ngIf="showTable">
+        <table id="proposalTable" class="proposal-table" [class.locked]="isTableLocked">
+            <thead>
+            <tr>
+                <th>Criteria</th>
+                <th>Audit Fees (USD)</th>
+                <th>Onsite Days</th>
+                <th>Offsite Days</th>
+                <th>Manday Price</th>
+                <th>Reporting Fees</th>
+                <th>Scheme Fees</th>
+                <th>Certificate License</th>
+                <th>Certificate Cost</th>
+                <th>Total Certificates</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let stage of stages; trackBy: trackByFn">
+                <td class="criteria-cell">{{ stage.criteria }}</td>
+                <td>
+                    <input
+                            type="number"
+                            class="form-input"
+                            [value]="stage.auditFees"
+                            [disabled]="isTableLocked || disabled"
+                            (input)="onInputChange(stage, 'auditFees', $event)"
+                            step="0.01"
+                            min="0"
+                    />
+                </td>
+                <td>
+                    <input
+                            type="number"
+                            class="form-input"
+                            [value]="stage.onsiteDays"
+                            [disabled]="isTableLocked || disabled"
+                            (input)="onInputChange(stage, 'onsiteDays', $event)"
+                            step="0.01"
+                            min="0"
+                    />
+                </td>
+                <td>
+                    <input
+                            type="number"
+                            class="form-input"
+                            [value]="stage.offsiteDays"
+                            [disabled]="isTableLocked || disabled"
+                            (input)="onInputChange(stage, 'offsiteDays', $event)"
+                            step="0.01"
+                            min="0"
+                    />
+                </td>
+                <td>
+                    <input
+                            type="number"
+                            class="form-input"
+                            [value]="stage.mandayPrice"
+                            [disabled]="isTableLocked || disabled"
+                            (input)="onInputChange(stage, 'mandayPrice', $event)"
+                            step="0.01"
+                            min="0"
+                    />
+                </td>
+                <td>
+                    <input
+                            type="number"
+                            class="form-input"
+                            [value]="stage.reportingFees"
+                            [disabled]="isTableLocked || disabled"
+                            (input)="onInputChange(stage, 'reportingFees', $event)"
+                            step="0.01"
+                            min="0"
+                    />
+                </td>
+                <td>
+                    <input
+                            type="number"
+                            class="form-input"
+                            [value]="stage.schemeFees"
+                            [disabled]="isTableLocked || disabled"
+                            (input)="onInputChange(stage, 'schemeFees', $event)"
+                            step="0.01"
+                            min="0"
+                    />
+                </td>
+                <td>
+                    <input
+                            type="number"
+                            class="form-input"
+                            [value]="stage.certificateLicense"
+                            [disabled]="isTableLocked || disabled"
+                            (input)="onInputChange(stage, 'certificateLicense', $event)"
+                            step="0.01"
+                            min="0"
+                    />
+                </td>
+                <td>
+                    <input
+                            type="number"
+                            class="form-input"
+                            [value]="stage.certificateCost"
+                            [disabled]="isTableLocked || disabled"
+                            (input)="onInputChange(stage, 'certificateCost', $event)"
+                            step="0.01"
+                            min="0"
+                    />
+                </td>
+                <td class="total-cell">{{ formatCurrency(calculateRowTotal(stage)) }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Grand Total Display -->
+        <div class="grand-total-section">
+            <h5>Grand Total: {{ formatCurrency(calculateGrandTotal()) }} USD</h5>
+        </div>
+
+        <!-- Table Controls -->
+        <div class="table-controls" *ngIf="!disabled">
+            <button type="button"
+                    class="btn btn-success"
+                    [disabled]="isTableLocked || isSaving"
+                    (click)="lockTable()"
+                    *ngIf="!isTableLocked">
+                <i class="fa fa-lock"></i> Lock Table
+            </button>
+
+            <button type="button"
+                    class="btn btn-primary"
+                    [disabled]="isSaving"
+                    (click)="saveProposalData()">
+                <i class="fa fa-save" *ngIf="!isSaving"></i>
+                <i class="fa fa-spinner fa-spin" *ngIf="isSaving"></i>
+                {{ isSaving ? 'Saving...' : 'Save Changes' }}
+            </button>
+        </div>
+
+        <div class="table-status" *ngIf="isTableLocked">
+            <p class="locked-message">
+                <i class="fa fa-check-circle text-success"></i>
+                Table is locked and saved
+            </p>
+        </div>
+    </div>
+
+    <!-- Proposal Information Section -->
+    <div class="proposal-info" *ngIf="showTable">
+        <h4>Proposal Information</h4>
+
+        <div class="info-grid">
+            <div class="info-row">
+                <label for="paymentTerms">Payment Terms *</label>
+                <input type="text"
+                       id="paymentTerms"
+                       [value]="proposal.paymentTerms"
+                       [disabled]="disabled"
+                       (input)="onProposalInfoChange('paymentTerms', $event)"
+                       placeholder="ex: 30 days net"
+                       maxlength="50"
+                       required />
+            </div>
+
+            <div class="info-row">
+                <label for="proposalNumber">Generate Proposal No *</label>
+                <input type="text"
+                       id="proposalNumber"
+                       [value]="proposal.proposalNumber"
+                       [disabled]="disabled"
+                       (input)="onProposalInfoChange('proposalNumber', $event)"
+                       placeholder="PROP-2024-001"
+                       maxlength="20"
+                       required />
+            </div>
+
+            <div class="info-row">
+                <label for="proposalDate">Update Proposal Date *</label>
+                <input type="date"
+                       id="proposalDate"
+                       [value]="proposal.proposalDate"
+                       [disabled]="disabled"
+                       (input)="onProposalInfoChange('proposalDate', $event)"
+                       required />
+            </div>
+
+            <div class="info-row">
+                <label for="clientProposal">Client Proposal *</label>
+                <input type="text"
+                       id="clientProposal"
+                       [value]="proposal.clientProposal"
+                       [disabled]="disabled"
+                       (input)="onProposalInfoChange('clientProposal', $event)"
+                       placeholder="Référence client"
+                       maxlength="50"
+                       required />
+            </div>
+
+            <div class="info-row file-row">
+                <label for="fileUpload">Upload Proposal File</label>
+                <input type="file"
+                       id="fileUpload"
+                       [disabled]="disabled"
+                       (change)="handleFileUpload($event)"
+                       accept=".pdf,.doc,.docx" />
+                <span class="file-info"
+                      [class.has-file]="opportunity.proposalFileName">
+                    {{ opportunity.proposalFileName || 'No file selected' }}
+                </span>
+
+                <button type="button"
+                        class="btn btn-secondary btn-sm"
+                        [disabled]="!opportunity.proposalFile || disabled || isSaving"
+                        (click)="saveProposalWithFile()"
+                        *ngIf="opportunity.proposalFile">
+                    <i class="fa fa-upload" *ngIf="!isSaving"></i>
+                    <i class="fa fa-spinner fa-spin" *ngIf="isSaving"></i>
+                    {{ isSaving ? 'Uploading...' : 'Upload File' }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Form Validation Status -->
+        <div class="form-validation" *ngIf="!isFormValid() && !disabled">
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i>
+                <strong>Missing required fields:</strong>
+                <ul>
+                    <li *ngIf="!showTable">Please show and complete the proposal table</li>
+                    <li *ngIf="showTable && !isTableLocked">Please lock the proposal table</li>
+                    <li *ngIf="!proposal.paymentTerms">Payment Terms</li>
+                    <li *ngIf="!proposal.proposalNumber">Proposal Number</li>
+                    <li *ngIf="!proposal.proposalDate">Proposal Date</li>
+                    <li *ngIf="!proposal.clientProposal">Client Proposal Reference</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Information -->
+    <div class="footer-info" *ngIf="showTable">
+        <div class="footer-details">
+            <div class="footer-item">
+                <span class="label">Client Proposal Date:</span>
+                <span class="value">{{ proposal.proposalDate || 'Not set' }}</span>
+            </div>
+            <div class="footer-item">
+                <span class="label">Generated Proposal No:</span>
+                <span class="value">{{ proposal.proposalNumber || 'Not generated' }}</span>
+            </div>
+            <div class="footer-item">
+                <span class="label">Proposal ID:</span>
+                <span class="value">{{ opportunity.id || 'N/A' }}</span>
+            </div>
+        </div>
+
+        <!-- Step Completion Section -->
+        <div class="step-completion">
+            <!-- Form Status -->
+            <div class="form-status" [class.completed]="isFormValid()" [class.disabled]="disabled">
+                <div class="status-indicator">
+                    <i class="fa fa-check-circle text-success" *ngIf="isFormValid() && !disabled"></i>
+                    <i class="fa fa-lock text-info" *ngIf="disabled"></i>
+                    <i class="fa fa-circle-o text-muted" *ngIf="!isFormValid() && !disabled"></i>
+
+                    <span *ngIf="isFormValid() && !disabled" class="text-success">
+                        Proposal completed - Ready to proceed
+                    </span>
+                    <span *ngIf="isFormValid() && disabled" class="text-info">
+                        Step completed and locked
+                    </span>
+                    <span *ngIf="!isFormValid() && !disabled" class="text-warning">
+                        Please complete proposal table and all information to proceed
+                    </span>
+                    <span *ngIf="!isFormValid() && disabled" class="text-muted">
+                        Step was not completed when locked
+                    </span>
+                </div>
+            </div>
+
+            <!-- Complete Step Button -->
+            <div class="completion-actions" *ngIf="!disabled">
+                <button type="button"
+                        class="btn btn-success btn-lg"
+                        [disabled]="!isFormValid() || isSaving"
+                        (click)="completeProposalStep()">
+                    <i class="fa fa-flag-checkered"></i>
+                    Complete Proposal Step
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Information (development only) -->
+    <div class="debug-info" *ngIf="false">
+        <h5>Debug Info:</h5>
+        <div class="debug-content">
+            <p><strong>Show Table:</strong> {{ showTable }}</p>
+            <p><strong>Table Locked:</strong> {{ isTableLocked }}</p>
+            <p><strong>Form Valid:</strong> {{ isFormValid() }}</p>
+            <p><strong>Grand Total:</strong> {{ formatCurrency(calculateGrandTotal()) }}</p>
+            <p><strong>Proposal Data:</strong></p>
+            <pre>{{ proposal | json }}</pre>
+        </div>
+    </div>
+</div>

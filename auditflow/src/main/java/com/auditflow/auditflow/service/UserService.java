@@ -49,4 +49,9 @@ public class UserService {
         User user = userRepo.findByUsername(req.username).orElseThrow();
         return jwtUtils.generateToken(user);
     }
+
+    public User findByUsername(String username) {
+        return userRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 }

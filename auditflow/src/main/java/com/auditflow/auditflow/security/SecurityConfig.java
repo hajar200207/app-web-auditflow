@@ -42,10 +42,33 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/api/companies/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
 
+                        // Opportunities endpoints - order matters!
                         .requestMatchers(HttpMethod.GET, "/api/opportunities/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/opportunities/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/companies/**").hasAnyRole("ROLE_AUDITOR", "ADMIN")
+                        // General PUT for opportunity updates (auditors and admins)
+                        .requestMatchers(HttpMethod.PUT, "/api/opportunities/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        // Specific stage update (admin only) - this should come after general PUT
                         .requestMatchers(HttpMethod.PUT, "/api/opportunities/*/stage").hasRole("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/companies/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/projects/count/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/projects/company/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/projects/from-opportunity/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/projects/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/projects/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/projects/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/projects//opportunity/{opportunityId}/create-projects").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        // Audit stages endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/projects/*").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/projects/*").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/projects/*").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/projects//opportunity/{opportunityId}/create-projects").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        // Audit stages endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/projects/*/audit-stages").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/projects/audit-stages/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/companies/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers("/api/audit-package/template", "/api/audit-package/download/**").permitAll()
+                        .requestMatchers("/api/audit-package/upload").permitAll()
+
                         .anyRequest().authenticated()
                 )
 
@@ -64,6 +87,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults("");
