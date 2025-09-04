@@ -1,8 +1,10 @@
 package com.auditflow.auditflow.controller;
 
 import com.auditflow.auditflow.model.AuditOpportunity;
+import com.auditflow.auditflow.service.FileNameService;
 import com.auditflow.auditflow.service.ProjectService;
 import com.auditflow.auditflow.repository.AuditOpportunityRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +29,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/opportunities")
 public class AuditOpportunityController {
-
+    @Autowired
+    private FileNameService fileNameService;
     private final AuditOpportunityRepository repository;
     private final ProjectService projectService;
 
@@ -51,25 +54,8 @@ public class AuditOpportunityController {
         return repository.findAll();
     }
 
-    @PutMapping("/{id}/stage")
-    public AuditOpportunity updateStage(@PathVariable Long id, @RequestBody AuditOpportunity updated) {
-        Optional<AuditOpportunity> oppOptional = repository.findById(id);
-        if (oppOptional.isPresent()) {
-            AuditOpportunity opp = oppOptional.get();
-            opp.setStage(updated.getStage());
-            opp.setStatus(updated.getStatus());
-            AuditOpportunity savedOpp = repository.save(opp);
 
-            // Si status = Done, créer un projet lié automatiquement
-            if ("Done".equalsIgnoreCase(savedOpp.getStatus())) {
-                projectService.createProjectFromOpportunity(savedOpp);
-            }
 
-            return savedOpp;
-        } else {
-            throw new RuntimeException("Opportunity not found with id: " + id);
-        }
-    }
 
     @PutMapping("/{id}/review-steps")
     public AuditOpportunity updateReviewSteps(
@@ -729,6 +715,85 @@ public class AuditOpportunityController {
             }
         }
     }
+
+    // Ajouter cette méthode dans votre AuditOpportunityController.java
+
+    @PostMapping("/{id}/generate-file-number")
+    public ResponseEntity<AuditOpportunity> generateFileNumber(@PathVariable Long id) {
+        try {
+            Optional<AuditOpportunity> oppOptional = repository.findById(id);
+            if (oppOptional.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            AuditOpportunity opportunity = oppOptional.get();
+
+            if (opportunity.getFileNumber() != null && !opportunity.getFileNumber().isEmpty()) {
+                return ResponseEntity.badRequest().build(); // Already has a file number
+            }
+
+            // Force generate file number
+            String fileNumber = fileNameService.generateFileCode(opportunity);
+            opportunity.setFileNumber(fileNumber);
+            opportunity.setReleaseDate(LocalDate.now());
+
+            // Also set auditCode for backward compatibility
+            opportunity.setAuditCode(fileNumber);
+
+            AuditOpportunity saved = repository.save(opportunity);
+            return ResponseEntity.ok(saved);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @PutMapping("/{id}/stage")
+    public AuditOpportunity updateStage(@PathVariable Long id, @RequestBody AuditOpportunity updated) {
+        Optional<AuditOpportunity> oppOptional = repository.findById(id);
+        if (oppOptional.isPresent()) {
+            AuditOpportunity opp = oppOptional.get();
+            opp.setStage(updated.getStage());
+            opp.setStatus(updated.getStatus());
+
+            // Générer automatiquement le File # quand le status devient "Done"
+            if ("Done".equalsIgnoreCase(updated.getStatus()) &&
+                    (opp.getFileNumber() == null || opp.getFileNumber().isEmpty())) {
+
+                // Générer le File # automatiquement avec le format MA-10000-{STANDARD}
+                String fileNumber = fileNameService.generateFileCode(opp);
+                opp.setFileNumber(fileNumber);
+                opp.setReleaseDate(LocalDate.now());
+
+                // Optionally, also set auditCode for backward compatibility
+                opp.setAuditCode(fileNumber);
+            }
+
+            AuditOpportunity savedOpp = repository.save(opp);
+
+            // Si status = Done, créer un projet lié automatiquement
+            if ("Done".equalsIgnoreCase(savedOpp.getStatus())) {
+                projectService.createProjectFromOpportunity(savedOpp);
+            }
+
+            return savedOpp;
+        } else {
+            throw new RuntimeException("Opportunity not found with id: " + id);
+        }
+    }
+
+    @GetMapping("/standards")
+    public ResponseEntity<List<AuditOpportunity>> getAllStandards() {
+        List<AuditOpportunity> opportunities = repository.findByStatus("Done");
+        return ResponseEntity.ok(opportunities);
+    }
+    @GetMapping("/completed")
+    public ResponseEntity<List<AuditOpportunity>> getCompletedOpportunities() {
+        List<AuditOpportunity> completed = repository.findByStatusIgnoreCase("Done");
+        return ResponseEntity.ok(completed);
+    }
+
+
+
 }
 
 

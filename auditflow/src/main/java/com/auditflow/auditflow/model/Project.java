@@ -131,5 +131,284 @@ public class Project {
         this.witnessAudit = false;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getOpportunityId() {
+        return opportunityId;
+    }
+
+    public void setOpportunityId(Long opportunityId) {
+        this.opportunityId = opportunityId;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getOpportunityName() {
+        return opportunityName;
+    }
+
+    public void setOpportunityName(String opportunityName) {
+        this.opportunityName = opportunityName;
+    }
+
+    public String getAuditCode() {
+        return auditCode;
+    }
+
+    public void setAuditCode(String auditCode) {
+        this.auditCode = auditCode;
+    }
+
+    public String getStageType() {
+        return stageType;
+    }
+
+    public void setStageType(String stageType) {
+        this.stageType = stageType;
+    }
+
+    public String getTeamLeader() {
+        return teamLeader;
+    }
+
+    public void setTeamLeader(String teamLeader) {
+        this.teamLeader = teamLeader;
+    }
+
+    public String getAuditTeam() {
+        return auditTeam;
+    }
+
+    public void setAuditTeam(String auditTeam) {
+        this.auditTeam = auditTeam;
+    }
+
+    public Boolean getWitnessAudit() {
+        return witnessAudit;
+    }
+
+    public void setWitnessAudit(Boolean witnessAudit) {
+        this.witnessAudit = witnessAudit;
+    }
+
+    public String getAuditType() {
+        return auditType;
+    }
+
+    public void setAuditType(String auditType) {
+        this.auditType = auditType;
+    }
+
+    public Integer getQuotationDays() {
+        return quotationDays;
+    }
+
+    public void setQuotationDays(Integer quotationDays) {
+        this.quotationDays = quotationDays;
+    }
+
+    public Integer getAssignedDays() {
+        return assignedDays;
+    }
+
+    public void setAssignedDays(Integer assignedDays) {
+        this.assignedDays = assignedDays;
+    }
+
+    public LocalDateTime getAuditPlanSentDate() {
+        return auditPlanSentDate;
+    }
+
+    public void setAuditPlanSentDate(LocalDateTime auditPlanSentDate) {
+        this.auditPlanSentDate = auditPlanSentDate;
+    }
+
+    public LocalDateTime getAuditReportSentDate() {
+        return auditReportSentDate;
+    }
+
+    public void setAuditReportSentDate(LocalDateTime auditReportSentDate) {
+        this.auditReportSentDate = auditReportSentDate;
+    }
+
+    public LocalDateTime getHandedForReviewDate() {
+        return handedForReviewDate;
+    }
+
+    public void setHandedForReviewDate(LocalDateTime handedForReviewDate) {
+        this.handedForReviewDate = handedForReviewDate;
+    }
+
+    public LocalDateTime getSubmittedToCaDate() {
+        return submittedToCaDate;
+    }
+
+    public void setSubmittedToCaDate(LocalDateTime submittedToCaDate) {
+        this.submittedToCaDate = submittedToCaDate;
+    }
+
+    public String getTentativeDates() {
+        return tentativeDates;
+    }
+
+    public void setTentativeDates(String tentativeDates) {
+        this.tentativeDates = tentativeDates;
+    }
+
+    public String getConfirmedDates() {
+        return confirmedDates;
+    }
+
+    public void setConfirmedDates(String confirmedDates) {
+        this.confirmedDates = confirmedDates;
+    }
+
+    public String getPlannedDates() {
+        return plannedDates;
+    }
+
+    public void setPlannedDates(String plannedDates) {
+        this.plannedDates = plannedDates;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDateTime releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public String getCertificateDetails() {
+        return certificateDetails;
+    }
+
+    public void setCertificateDetails(String certificateDetails) {
+        this.certificateDetails = certificateDetails;
+    }
+
+    public String getPaymentDetails() {
+        return paymentDetails;
+    }
+
+    public void setPaymentDetails(String paymentDetails) {
+        this.paymentDetails = paymentDetails;
+    }
+
+    public String getPaymentNotes() {
+        return paymentNotes;
+    }
+
+    public void setPaymentNotes(String paymentNotes) {
+        this.paymentNotes = paymentNotes;
+    }
+
+    public String getAssignedAuditor() {
+        return assignedAuditor;
+    }
+
+    public void setAssignedAuditor(String assignedAuditor) {
+        this.assignedAuditor = assignedAuditor;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public AuditOpportunity getOpportunity() {
+        return opportunity;
+    }
+
+    public void setOpportunity(AuditOpportunity opportunity) {
+        this.opportunity = opportunity;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getExpectedEndDate() {
+        return expectedEndDate;
+    }
+
+    public void setExpectedEndDate(LocalDate expectedEndDate) {
+        this.expectedEndDate = expectedEndDate;
+    }
+
+    public LocalDate getActualEndDate() {
+        return actualEndDate;
+    }
+
+    public void setActualEndDate(LocalDate actualEndDate) {
+        this.actualEndDate = actualEndDate;
+    }
+
+    public String getProjectManager() {
+        return projectManager;
+    }
+
+    public void setProjectManager(String projectManager) {
+        this.projectManager = projectManager;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
 }

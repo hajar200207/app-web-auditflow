@@ -19,6 +19,9 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private FileNameService fileNameService;
+
 
     @Autowired
     private AuditOpportunityRepository opportunityRepository;
@@ -220,4 +223,11 @@ public class ProjectService {
 
         return projectRepository.save(project);
     }
+
+    public Project findById(Long id) {
+        Optional<Project> project = projectRepository.findById(id);
+        return project.orElse(null);
+    }
+
+
 }

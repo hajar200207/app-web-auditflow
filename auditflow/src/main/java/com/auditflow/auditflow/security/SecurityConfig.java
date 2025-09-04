@@ -33,6 +33,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/programme-auditor/**").hasAnyRole("ROLE_AUDITOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/tasks/**").hasAnyRole("ADMIN", "ROLE_AUDITOR")
                         .requestMatchers(HttpMethod.POST, "/api/tasks/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/chat/messages/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/chat/unread-count/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/chat/send").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/chat/mark-read/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/chat/participants/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
+                        .requestMatchers("/api/opportunities/company/**").hasRole("ROLE_AUDITOR") // ou ROLE_X
 
                         .requestMatchers(HttpMethod.GET, "/api/calendar/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/calendar/**").hasRole("ADMIN")
@@ -68,6 +74,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/companies/**").hasAnyRole("ROLE_AUDITOR", "ROLE_ADMIN")
                         .requestMatchers("/api/audit-package/template", "/api/audit-package/download/**").permitAll()
                         .requestMatchers("/api/audit-package/upload").permitAll()
+                        .requestMatchers("/ws-chat/**").permitAll()
 
                         .anyRequest().authenticated()
                 )

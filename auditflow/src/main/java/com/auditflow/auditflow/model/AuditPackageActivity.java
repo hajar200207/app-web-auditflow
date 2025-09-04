@@ -1,10 +1,13 @@
 package com.auditflow.auditflow.model;
 
-
-
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "audit_package_activities")
 public class AuditPackageActivity {
@@ -16,10 +19,10 @@ public class AuditPackageActivity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "activity_type", nullable = false, length = 50)
+    @Column(name = "activity_type", nullable = false)
     private String activityType; // TEMPLATE_DOWNLOAD, FILE_UPLOAD, FILE_DOWNLOAD
 
-    @Column(name = "file_name", length = 255)
+    @Column(name = "file_name")
     private String fileName;
 
     @Column(name = "timestamp", nullable = false)
@@ -28,21 +31,36 @@ public class AuditPackageActivity {
     @Column(name = "description", length = 500)
     private String description;
 
-    @Column(name = "ip_address", length = 45)
-    private String ipAddress;
+    @Column(name = "project_id")
+    private Long projectId;
 
-    // Constructeurs
-    public AuditPackageActivity() {}
+    @Column(name = "stage_name")
+    private String stageName;
 
-    public AuditPackageActivity(Long userId, String activityType, String fileName, LocalDateTime timestamp, String description) {
+    // Constructors
+    public AuditPackageActivity() {
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public AuditPackageActivity(Long userId, String activityType, String fileName, String description) {
         this.userId = userId;
         this.activityType = activityType;
         this.fileName = fileName;
-        this.timestamp = timestamp;
         this.description = description;
+        this.timestamp = LocalDateTime.now();
     }
 
-    // Getters et Setters
+    public AuditPackageActivity(Long userId, String activityType, String fileName, String description,
+                                Long projectId, String stageName) {
+        this.userId = userId;
+        this.activityType = activityType;
+        this.fileName = fileName;
+        this.description = description;
+        this.projectId = projectId;
+        this.stageName = stageName;
+        this.timestamp = LocalDateTime.now();
+    }
+
     public Long getId() {
         return id;
     }
@@ -91,23 +109,19 @@ public class AuditPackageActivity {
         this.description = description;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
-    @Override
-    public String toString() {
-        return "AuditPackageActivity{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", activityType='" + activityType + '\'' +
-                ", fileName='" + fileName + '\'' +
-                ", timestamp=" + timestamp +
-                ", description='" + description + '\'' +
-                '}';
+    public String getStageName() {
+        return stageName;
+    }
+
+    public void setStageName(String stageName) {
+        this.stageName = stageName;
     }
 }
