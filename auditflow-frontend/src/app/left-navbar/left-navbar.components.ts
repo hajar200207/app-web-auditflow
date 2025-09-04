@@ -11,8 +11,11 @@ import { CommonModule } from '@angular/common';
 })
 export class LeftNavbarComponent {
   active: string = '';
+  userRole: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.userRole = localStorage.getItem('role'); // get role from localStorage or AuthService
+  }
 
   toggleSubmenu(section: string) {
     this.active = this.active === section ? '' : section;
@@ -20,9 +23,8 @@ export class LeftNavbarComponent {
 
   navigateTo(path: string, section: string) {
     this.active = section;
-    const userRole = localStorage.getItem('role'); // ou un authService
-    const basePath = userRole === 'admin' ? 'dashboard-admin' : 'dashboard-auditor';
+    const basePath = this.userRole === 'admin' ? 'dashboard-admin' : 'dashboard-auditor';
     this.router.navigate([`/${basePath}/${path}`]);
   }
-
 }
+

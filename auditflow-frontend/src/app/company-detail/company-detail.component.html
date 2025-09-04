@@ -70,7 +70,7 @@
 
 <div class="company-detail-container" *ngIf="company">
     <div class="company-header">
-        <h2>{{ company.name }}</h2>
+
         <div class="action-buttons">
             <button>Edit</button>
             <button>Contacts ({{ company.contacts?.length || 0 }})</button>
@@ -193,6 +193,42 @@
             <div class="note-content">No Available Notes.</div>
         </div>
     </div>
+
+    <h3>Available Standards</h3>
+
+    <table class="table table-striped table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>File #</th>
+            <th>Release Date</th>
+            <th>Standard</th>
+            <th>Accredited</th>
+            <th>Scope</th>
+            <th>Audit Frequency</th>
+            <th>Risk Level</th>
+            <th>IAF</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let opp of completedOpportunities; trackBy: trackByOpportunityId">
+            <td>{{ opp.auditCode }}</td>
+            <td>{{ opp.releaseDate }}</td>
+            <td>{{ opp.standard }}</td>
+            <td>{{ opp.accredited }}</td>
+            <td>{{ opp.scope }}</td>
+            <td>{{ opp.auditFrequency }}</td>
+            <td>{{ opp.riskLevel }}</td>
+            <td>{{ opp.iafCategory }}</td>
+        </tr>
+        <tr *ngIf="completedOpportunities.length === 0">
+            <td colspan="8" class="text-center">No Available Standards</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
 </div>
 
 <style>

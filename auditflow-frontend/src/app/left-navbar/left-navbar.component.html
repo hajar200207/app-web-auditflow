@@ -1,126 +1,8 @@
-
-<!--<div class="left-navbar">-->
-<!--    <ul class="sidebar-icons">-->
-<!--        <li (click)="toggleSubmenu('calendar')" [class.active]="active === 'calendar'">-->
-<!--            <i class="fa fa-calendar"></i>-->
-<!--            <span class="tooltip">Schedule & Tasks</span>-->
-<!--            <div class="submenu-right" *ngIf="active === 'calendar'">-->
-<!--                <a (click)="navigateTo('calendar', 'calendar')">Calendar</a>-->
-<!--                <a (click)="navigateTo('tasks', 'calendar')">Tasks</a>-->
-<!--            </div>-->
-<!--        </li>-->
-
-<!--        <li (click)="toggleSubmenu('chart')" [class.active]="active === 'chart'">-->
-<!--            <i class="fa fa-pie-chart"></i>-->
-<!--            <span class="tooltip">Dashboards</span>-->
-<!--            <div class="submenu-right" *ngIf="active === 'chart'">-->
-<!--                <a (click)="navigateTo('top management', 'chart')">Top Management Dashboard</a>-->
-<!--                <a (click)="navigateTo('cert management', 'chart')"> Cert Management Dashboard</a>-->
-<!--                <a (click)="navigateTo('certificates', 'chart')">Certificates Dashboard</a>-->
-<!--                <a (click)="navigateTo('sales', 'chart')">Sales Dashboard</a>-->
-<!--                <a (click)="navigateTo('reviewers', 'chart')">Reviewer sDashboard</a>-->
-<!--                <a (click)="navigateTo('auditors', 'chart')"> AuditorsDashboard</a>-->
-<!--                <a (click)="navigateTo('changes management', 'chart')"> Changes management Dashboard</a>-->
-<!--                <a (click)="navigateTo('finance', 'chart')"> Finance Dashboard</a>-->
-<!--                <a (click)="navigateTo('sfda main page', 'chart')"> SFDA Main Page Dashboard</a>-->
-<!--                <a (click)="navigateTo('agent', 'chart')">Agent Dashboard</a>-->
-<!--            </div>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('Reports', 'Reports')" [class.active]="active === 'Reports'">-->
-<!--            <i class="fa fa-book"></i>-->
-<!--            <span class="tooltip">Reports</span>-->
-<!--            <div class="submenu-right" *ngIf="active === 'Reports'">-->
-<!--                <a (click)="navigateTo('Certification Reports', ' Reports')">  Certification Reports</a>-->
-<!--                <a (click)="navigateTo('Global Performance', 'Reports')"> Global Performance</a>-->
-<!--                <a (click)="navigateTo('Certification Summary', 'Reports')">  Certification Summary</a>-->
-<!--                <a (click)="navigateTo(' Audits Performance Summary', 'Reports')">  Audits Performance Summary </a>-->
-<!--                <a (click)="navigateTo(' Finance Summary', 'Reports')">  Finance Summary </a>-->
-<!--                <a (click)="navigateTo(' Freelance Activities', 'Reports')">  Freelance Activities </a>-->
-<!--                <a (click)="navigateTo(' Active Clients List', 'Reports')">  Active Clients List </a>-->
-<!--                <a (click)="navigateTo(' External Reports', 'Reports')">  External Reports </a>-->
-<!--                <a (click)="navigateTo(' Agents Audits/Transfers', 'Reports')">  Agents Audits/Transfers </a>-->
-<!--                <a (click)="navigateTo('Agents Report', 'Reports')"> Agents Report </a>-->
-<!--            </div>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('settings', 'settings')" [class.active]="active === 'settings'">-->
-<!--            <i class="fa fa-cog"></i>-->
-<!--            <span class="tooltip">Settings</span>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('Companies and Products Info', 'Companies and Products Info')" [class.active]="active === 'Companies and Products Info'">-->
-<!--            <i class="fa fa-home"></i>-->
-<!--            <span class="tooltip">Companies and Products Info</span>-->
-<!--            <div class="submenu-right" *ngIf="active === 'Companies and Products Info'">-->
-<!--                <a (click)="navigateTo('Companies Info', ' Companies and Products Info')">  Companies Info</a>-->
-<!--                <a (click)="navigateTo('Contacts List', 'Companies and Products Info')"> Contacts List</a>-->
-<!--                <a (click)="navigateTo('Competitors', 'Companies and Products Info')">  Competitors</a>-->
-<!--                <a (click)="navigateTo(' Products Info', 'Companies and Products Info')">  Products Info </a>-->
-<!--            </div>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('contact', 'contact')" [class.active]="active === 'contact'">-->
-<!--            <i class="fa fa-envelope"></i>-->
-<!--            <span class="tooltip">Contact</span>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('Auditors Qualification Module', 'Auditors Qualification Module')" [class.active]="active === 'Auditors Qualification Module'">-->
-<!--            <i class="fa fa-user"></i>-->
-<!--            <span class="tooltip">Auditors Qualification Module</span>-->
-<!--            <div class="submenu-right" *ngIf="active === 'Auditors Qualification Module'">-->
-<!--                <a (click)="navigateTo('module dashboard', 'Auditors Qualification Module')"> module dashboard</a>-->
-<!--                <a (click)="navigateTo('auditors cards', 'Auditors Qualification Module')"> auditors cards</a>-->
-<!--            </div>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('Training Operations', 'Training Operations')" [class.active]="active === 'Training Operations'">-->
-<!--            <i class="fa fa-users"></i>-->
-<!--            <span class="tooltip">Training Operations</span>-->
-<!--            <div class="submenu-right" *ngIf="active === 'Training Operations'">-->
-<!--                <a (click)="navigateTo('instructors list', 'Training Operations')">  Instructors List</a>-->
-<!--                <a (click)="navigateTo(' master planner', 'Training Operations')">  Master Planner</a>-->
-<!--                <a (click)="navigateTo(' master planner', 'Training Operations')">  Master Planner</a>-->
-<!--                <a (click)="navigateTo(' participants log', 'Training Operations')">  Participants Log </a>-->
-<!--                <a (click)="navigateTo(' training operations', 'Training Operations')">  Training Operations </a>-->
-<!--                <a (click)="navigateTo('training review', 'Training Operations')">  Training Review </a>-->
-<!--                <a (click)="navigateTo('training reports', 'Training Operations')">  Training Reports </a>-->
-<!--                <a (click)="navigateTo('training monthly', 'Training Operations')">  Training Monthly </a>-->
-<!--            </div>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('handshake', 'handshake')" [class.active]="active === 'handshake'">-->
-<!--            <i class="fa fa-handshake"></i>-->
-<!--            <span class="tooltip">Handshake</span>-->
-<!--            <div class="submenu-right" *ngIf="active === 'handshake'">-->
-<!--                <a (click)="navigateTo('strategy', 'handshake')"> strategy</a>-->
-<!--                <a (click)="navigateTo('marketing', 'handshake')"> marketing</a>-->
-<!--                <a (click)="navigateTo('leads & opportunities', 'handshake')">leads & opportunities</a>-->
-<!--            </div>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('search', 'search')" [class.active]="active === 'search'">-->
-<!--            <i class="fa fa-search"></i>-->
-<!--            <span class="tooltip">Search the Internet</span>-->
-<!--        </li>-->
-
-<!--        <li (click)="navigateTo('template', 'template')" [class.active]="active === 'template'">-->
-<!--            <i class="fab fa-spotify"></i>-->
-<!--            <span class="tooltip">Template</span>-->
-<!--            <div class="submenu-right" *ngIf="active === 'template'">-->
-<!--                <a (click)="navigateTo('sales templates', 'template')"> Sales Templates</a>-->
-<!--                <a (click)="navigateTo('audit package templates', 'template')"> Audit Package Templates</a>-->
-<!--                <a (click)="navigateTo('guidance document', 'template')">Guidance Document</a>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</div>-->
-
 <div class="left-navbar">
     <ul class="sidebar-icons">
 
-        <!-- Schedule & Tasks -->
-        <li (click)="toggleSubmenu('calendar')" [class.active]="active === 'calendar'">
+        <!-- Admin Only Icons -->
+        <li *ngIf="userRole === 'admin'" (click)="toggleSubmenu('calendar')" [class.active]="active === 'calendar'">
             <i class="fa fa-calendar"></i>
             <span class="tooltip">Schedule & Tasks</span>
             <div class="submenu-right" *ngIf="active === 'calendar'">
@@ -129,8 +11,7 @@
             </div>
         </li>
 
-        <!-- Dashboards -->
-        <li (click)="toggleSubmenu('chart')" [class.active]="active === 'chart'">
+        <li *ngIf="userRole === 'admin'" (click)="toggleSubmenu('chart')" [class.active]="active === 'chart'">
             <i class="fa fa-pie-chart"></i>
             <span class="tooltip">Dashboards</span>
             <div class="submenu-right" *ngIf="active === 'chart'">
@@ -147,8 +28,7 @@
             </div>
         </li>
 
-        <!-- Reports -->
-        <li (click)="toggleSubmenu('reports')" [class.active]="active === 'reports'">
+        <li *ngIf="userRole === 'admin'" (click)="toggleSubmenu('reports')" [class.active]="active === 'reports'">
             <i class="fa fa-book"></i>
             <span class="tooltip">Reports</span>
             <div class="submenu-right" *ngIf="active === 'reports'">
@@ -165,32 +45,12 @@
             </div>
         </li>
 
-        <!-- Settings -->
-        <li (click)="navigateTo('settings', 'settings')" [class.active]="active === 'settings'">
+        <li *ngIf="userRole === 'admin'" (click)="navigateTo('settings', 'settings')" [class.active]="active === 'settings'">
             <i class="fa fa-cog"></i>
             <span class="tooltip">Settings</span>
         </li>
 
-        <!-- Companies and Products Info -->
-        <li (click)="toggleSubmenu('info')" [class.active]="active === 'info'">
-            <i class="fa fa-home"></i>
-            <span class="tooltip">Companies & Products Info</span>
-            <div class="submenu-right" *ngIf="active === 'info'">
-                <a (click)="navigateTo('companies-info', 'info')">Companies Info</a>
-                <a (click)="navigateTo('contacts-list', 'info')">Contacts List</a>
-                <a (click)="navigateTo('competitors', 'info')">Competitors</a>
-                <a (click)="navigateTo('products-info', 'info')">Products Info</a>
-            </div>
-        </li>
-
-        <!-- Contact -->
-        <li (click)="navigateTo('contact', 'contact')" [class.active]="active === 'contact'">
-            <i class="fa fa-envelope"></i>
-            <span class="tooltip">Contact</span>
-        </li>
-
-        <!-- Auditors Qualification Module -->
-        <li (click)="toggleSubmenu('auditors')" [class.active]="active === 'auditors'">
+        <li *ngIf="userRole === 'admin'" (click)="toggleSubmenu('auditors')" [class.active]="active === 'auditors'">
             <i class="fa fa-user"></i>
             <span class="tooltip">Auditors Qualification</span>
             <div class="submenu-right" *ngIf="active === 'auditors'">
@@ -199,8 +59,7 @@
             </div>
         </li>
 
-        <!-- Training Operations -->
-        <li (click)="toggleSubmenu('training')" [class.active]="active === 'training'">
+        <li *ngIf="userRole === 'admin'" (click)="toggleSubmenu('training')" [class.active]="active === 'training'">
             <i class="fa fa-users"></i>
             <span class="tooltip">Training Operations</span>
             <div class="submenu-right" *ngIf="active === 'training'">
@@ -214,8 +73,7 @@
             </div>
         </li>
 
-        <!-- Handshake -->
-        <li (click)="toggleSubmenu('handshake')" [class.active]="active === 'handshake'">
+        <li *ngIf="userRole === 'admin'" (click)="toggleSubmenu('handshake')" [class.active]="active === 'handshake'">
             <i class="fa fa-handshake"></i>
             <span class="tooltip">Handshake</span>
             <div class="submenu-right" *ngIf="active === 'handshake'">
@@ -225,14 +83,12 @@
             </div>
         </li>
 
-        <!-- Search -->
-        <li (click)="navigateTo('search', 'search')" [class.active]="active === 'search'">
+        <li *ngIf="userRole === 'admin'" (click)="navigateTo('search', 'search')" [class.active]="active === 'search'">
             <i class="fa fa-search"></i>
             <span class="tooltip">Search</span>
         </li>
 
-        <!-- Template -->
-        <li (click)="toggleSubmenu('template')" [class.active]="active === 'template'">
+        <li *ngIf="userRole === 'admin'" (click)="toggleSubmenu('template')" [class.active]="active === 'template'">
             <i class="fab fa-spotify"></i>
             <span class="tooltip">Template</span>
             <div class="submenu-right" *ngIf="active === 'template'">
@@ -241,6 +97,18 @@
                 <a (click)="navigateTo('guidance-document', 'template')">Guidance Document</a>
             </div>
         </li>
+
+        <!-- Companies & Products Info (Admin + Auditor) -->
+        <li *ngIf="userRole === 'admin' || userRole === 'auditor'" (click)="toggleSubmenu('info')" [class.active]="active === 'info'">
+            <i class="fa fa-home"></i>
+            <span class="tooltip">Companies & Products Info</span>
+            <div class="submenu-right" *ngIf="active === 'info'">
+                <a (click)="navigateTo('companies-info', 'info')">Companies Info</a>
+                <a *ngIf="userRole === 'admin'" (click)="navigateTo('contacts-list', 'info')">Contacts List</a>
+                <a *ngIf="userRole === 'admin'" (click)="navigateTo('competitors', 'info')">Competitors</a>
+                <a *ngIf="userRole === 'admin'" (click)="navigateTo('products-info', 'info')">Products Info</a>
+            </div>
+        </li>
+
     </ul>
 </div>
-

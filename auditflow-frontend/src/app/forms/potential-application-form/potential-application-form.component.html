@@ -174,22 +174,21 @@
             <option value="Critical">Critical</option>
         </select>
     </label>
-
     <label>
         IAF Category *
         <select [(ngModel)]="opportunity.iafCategory"
-                (change)="notifyChange()"
+                (change)="selectIAF($any($event.target).value)"
+
                 [disabled]="disabled"
                 required>
             <option value="">Select IAF Category</option>
-            <option value="Category 1">Category 1 - Agriculture, Fishing</option>
-            <option value="Category 2">Category 2 - Mining and quarrying</option>
-            <option value="Category 3">Category 3 - Food products, beverages</option>
-            <option value="Category 4">Category 4 - Textiles and textile products</option>
-            <option value="Category 5">Category 5 - Leather and leather products</option>
-            <!-- Add more categories as needed -->
+            <option *ngFor="let iaf of iafCodes" [value]="iaf.no">
+                {{ iaf.no }} - {{ iaf.description }}
+            </option>
         </select>
     </label>
+
+
 
     <label>
         Check Available Auditors

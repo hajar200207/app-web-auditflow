@@ -364,9 +364,13 @@ export class OpportunityService {
 
 
     // Get all opportunities
-    getOpportunities(): Observable<Opportunity[]> {
-        return this.http.get<Opportunity[]>(this.apiUrl);
+    getOpportunitiesByCompany(companyId: number): Observable<Opportunity[]> {
+        const token = localStorage.getItem('token') || '';
+        const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+
+        return this.http.get<Opportunity[]>(`http://localhost:8080/api/opportunities/company/${companyId}`, { headers });
     }
+
 
     // Create new opportunity
     createOpportunity(opportunity: Partial<AuditOpportunity>): Observable<AuditOpportunity> {
@@ -382,5 +386,6 @@ export class OpportunityService {
     deleteOpportunity(id: number): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/${id}`);
     }
+
 
 }

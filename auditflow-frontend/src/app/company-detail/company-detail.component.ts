@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgIf, CommonModule } from '@angular/common';
 import { NewSupplierAuditComponent } from '../new-supplier-audit/new-supplier-audit.component';
 import {Project, ProjectService} from "../project.service";
+import {Observable} from "rxjs";
 
 interface Opportunity {
     id: number;
@@ -18,7 +19,17 @@ interface Opportunity {
     lastModified: string;
     companyId: number;
 }
-
+export interface CompletedOpportunity {
+    id: number;
+    auditCode: string; // File #
+    releaseDate: string;
+    standard: string;
+    accredited: string;
+    scope: string;
+    auditFrequency: string;
+    riskLevel: string;
+    iafCategory: string;
+}
 @Component({
     selector: 'app-company-detail',
     templateUrl: './company-detail.component.html',
@@ -38,7 +49,7 @@ export class CompanyDetailComponent implements OnInit {
     projects: Project[] = [];
     loading: boolean = true;
     selectedProject: Project | null = null;
-
+    completedOpportunities: CompletedOpportunity[] = [];
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -53,6 +64,7 @@ export class CompanyDetailComponent implements OnInit {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
         this.loadProjects();
+        this.loadCompletedOpportunitiesGlobal();
 
         this.http.get(`http://localhost:8080/api/companies/${id}`, { headers })
             .subscribe({
@@ -66,7 +78,7 @@ export class CompanyDetailComponent implements OnInit {
                 error: err => console.error('Error counting opportunities', err)
             });
 
-
+        this.loadCompletedOpportunities(Number(id));
 
         this.loadDoneOpportunities(Number(id));
     }
@@ -87,6 +99,27 @@ export class CompanyDetailComponent implements OnInit {
                     console.log('Project count set to:', this.projectCount);
                 },
                 error: err => console.error('Error loading opportunities', err)
+            });
+    }
+    loadCompletedOpportunities(companyId: number) {
+        this.http.get<any[]>(`http://localhost:8080/api/opportunities/company/${companyId}/completed`,
+            { headers: this.getHeaders() })
+            .subscribe({
+                next: opportunities => {
+                    this.completedOpportunities = opportunities.map(opp => ({
+                        id: opp.id,
+                        auditCode: opp.auditCode || 'N/A',
+                        releaseDate: this.formatDate(opp.releaseDate || opp.targetAuditDate),
+                        standard: opp.standard || 'N/A',
+                        accredited: 'Yes', // You can add this logic based on your requirements
+                        scope: opp.scope || 'N/A',
+                        auditFrequency: opp.auditFrequency || 'N/A',
+                        riskLevel: opp.riskLevel || 'Medium',
+                        iafCategory: opp.iafCategory || 'N/A'
+                    }));
+                    console.log('Completed opportunities:', this.completedOpportunities);
+                },
+                error: err => console.error('Error loading completed opportunities', err)
             });
     }
 
@@ -223,5 +256,31 @@ export class CompanyDetailComponent implements OnInit {
             style: 'currency',
             currency: 'USD'
         }).format(amount);
+    }
+    trackByOpportunityId(index: number, opportunity: CompletedOpportunity): number {
+        return opportunity.id;
+    }
+    loadCompletedOpportunitiesGlobal() {
+        this.http.get<any[]>(`http://localhost:8080/api/opportunities/completed`,
+            { headers: this.getHeaders() })
+            .subscribe({
+                next: opportunities => {
+                    this.completedOpportunities = opportunities.map(opp => ({
+                        id: opp.id,
+                        auditCode: opp.auditCode || 'N/A',
+                        releaseDate: this.formatDate(opp.releaseDate),
+                        standard: opp.standard || 'N/A',
+                        accredited: opp.accredited ? 'Yes' : 'No',
+                        scope: opp.scope || 'N/A',
+                        auditFrequency: opp.auditFrequency || 'N/A',
+                        riskLevel: opp.riskLevel || 'Medium',
+                        iafCategory: opp.iafCategory || 'N/A'
+                    }));
+                },
+                error: err => console.error('Error loading global completed opportunities', err)
+            });
+    }
+    getAllCompleted(): Observable<CompletedOpportunity[]> {
+        return this.http.get<CompletedOpportunity[]>(`http://localhost:8080/api/opportunities/completed`);
     }
 }

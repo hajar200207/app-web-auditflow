@@ -1192,4 +1192,8 @@ export class PipelineDetailsComponent implements OnInit {
       this.updateStepValidation();
     }
   }
+  onChatUnreadCountChange(count: number): void {
+    // Optionnel : afficher une notification ou mettre à jour l'UI
+    console.log('Total unread messages:', count);
+  }
 }

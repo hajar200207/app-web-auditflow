@@ -3,7 +3,8 @@
         [opportunityId]="opportunityId"
         [currentStep]="currentStep"
         [currentUserRole]="currentUserRole"
-        [opportunity]="opportunity">
+        [opportunity]="opportunity"
+        (unreadCountChange)="onChatUnreadCountChange($event)">
 </app-pipeline-chat>
 
 <div class="pipeline-details-container" *ngIf="!loading">

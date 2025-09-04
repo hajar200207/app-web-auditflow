@@ -77,6 +77,14 @@ export const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
 
+
+  {
+    path: 'dashboard-auditeur',
+    component: DashboardAdminComponent,
+    children: [
+      { path: 'calendar', component: CalendarComponent, }]},
+
+
   {
     path: 'dashboard-admin',
     component: DashboardAdminComponent,
